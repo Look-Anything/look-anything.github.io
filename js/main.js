@@ -1,20 +1,20 @@
 const columns = [
-  { label: "openQA", hint: "Avg. ↑", low: false },
-  { label: "MCQ", hint: "Avg. ↑", low: false },
-  { label: "T2P L₂", hint: "↓", low: true },
-  { label: "T2B mIoU", hint: "↑", low: false },
-  { label: "Acc", hint: "↑", low: false },
-  { label: "R-L", hint: "↑", low: false },
-  { label: "B-4", hint: "↑", low: false },
-  { label: "mIoU", hint: "↑", low: false },
-  { label: "F1", hint: "↑", low: false },
-  { label: "R-L", hint: "↑", low: false },
-  { label: "B-4", hint: "↑", low: false },
-  { label: "Acc", hint: "↑", low: false },
-  { label: "Acc", hint: "↑", low: false },
-  { label: "Acc", hint: "↑", low: false },
-  { label: "F1", hint: "↑", low: false },
-  { label: "F1", hint: "↑", low: false },
+  { label: "openQA", mode: "Avg.", hint: "↑", low: false },
+  { label: "MCQ", mode: "Avg.", hint: "↑", low: false },
+  { label: "L₂", mode: "T2P", hint: "↓", low: true },
+  { label: "mIoU", mode: "T2B", hint: "↑", low: false },
+  { label: "Acc", mode: "MCQ", hint: "↑", low: false },
+  { label: "R-L", mode: "openQA", hint: "↑", low: false },
+  { label: "B-4", mode: "openQA", hint: "↑", low: false },
+  { label: "mIoU", mode: "openQA", hint: "↑", low: false },
+  { label: "F1", mode: "MCQ", hint: "↑", low: false },
+  { label: "R-L", mode: "openQA", hint: "↑", low: false },
+  { label: "B-4", mode: "openQA", hint: "↑", low: false },
+  { label: "Acc", mode: "MCQ", hint: "↑", low: false },
+  { label: "Acc", mode: "MCQ", hint: "↑", low: false },
+  { label: "Acc", mode: "MCQ", hint: "↑", low: false },
+  { label: "F1", mode: "openQA", hint: "↑", low: false },
+  { label: "F1", mode: "openQA", hint: "↑", low: false },
 ];
 
 const groups = [
@@ -64,7 +64,7 @@ const models = [
   ["Qwen3-VL-32B", "open", [0.228, 0.641, 0.255, 0.108, 0.569, 0.221, 0.135, 0.366, 0.667, 0.239, 0.103, 0.693, 0.482, 0.796, 0.000, 0.529]],
   ["InternVL3-38B", "open", [0.163, 0.655, 0.336, 0.092, 0.552, 0.185, 0.112, 0.253, 0.592, 0.259, 0.113, 0.755, 0.557, 0.818, 0.025, 0.197]],
   ["InternVL3.5-38B", "open", [0.178, 0.577, 0.694, 0.092, 0.462, 0.205, 0.098, 0.290, 0.478, 0.210, 0.088, 0.728, 0.429, 0.787, 0.000, 0.358]],
-  ["LookAnything", "ours", [0.522, 0.839, 0.096, 0.321, 0.726, 0.453, 0.272, 0.596, 0.856, 0.416, 0.209, 0.916, 0.856, 0.842, 0.783, 0.923]],
+  ["LookAnything (2B)", "ours", [0.518, 0.852, 0.094, 0.333, 0.764, 0.459, 0.283, 0.610, 0.865, 0.466, 0.260, 0.924, 0.863, 0.847, 0.805, 0.932]],
 ].map(([name, group, scores], order) => ({ name, group, scores, order }));
 
 const state = { filter: "all", query: "", col: 0, bestFirst: true };
@@ -146,7 +146,7 @@ function setupLeaderboard() {
   const head = document.querySelector("#leaderboard-head");
   const groupRow = groups.map(([name, span]) => `<th class="group-head" colspan="${span}">${name}</th>`).join("");
   const metricRow = columns.map((col, index) => {
-    return `<th><button class="sort-btn" type="button" data-sort="${index}" aria-sort="none">${col.label} ${col.hint} <span class="arrow"></span></button></th>`;
+    return `<th><button class="sort-btn" type="button" data-sort="${index}" aria-sort="none"><span class="submode">${col.mode}</span><span>${col.label} ${col.hint} <span class="arrow"></span></span></button></th>`;
   }).join("");
   head.innerHTML = `<tr><th rowspan="2">Model</th>${groupRow}</tr><tr>${metricRow}</tr>`;
   head.addEventListener("click", (event) => {

@@ -187,14 +187,44 @@ h1, h2, h3, h4 { color: var(--dark); line-height: 1.25; }
   font-weight: 600;
   letter-spacing: -0.035em;
   line-height: 1.18;
-  max-width: 16em;
+  max-width: 17em;
   margin: 8px auto 0;
 }
 @media (max-width: 700px) {
   .hero h1 br { display: none; }
 }
+.authors {
+  max-width: 860px;
+  margin: 18px auto 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 16px;
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--slate-800);
+}
+.authors span { white-space: nowrap; }
+.authors sup, .affiliations sup {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-left: 1px;
+}
+.affiliations {
+  max-width: 900px;
+  margin: 8px auto 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 16px;
+  font-size: 13.5px;
+  color: var(--slate-500);
+}
+.affiliations span { white-space: nowrap; }
+.affiliations sup { margin-left: 0; margin-right: 2px; }
 .lede {
-  max-width: 740px;
+  max-width: 760px;
   margin: 18px auto 0;
   font-size: 17px;
   color: var(--slate-600);
@@ -372,8 +402,19 @@ figcaption {
   line-height: 1.55;
 }
 .paper-figure { margin-top: 28px; }
-.attention-card { background: white; border: 1px solid var(--slate-200); border-radius: var(--radius-lg); padding: 12px; }
-.attention-card img { width: 100%; }
+.sub-panel {
+  background: var(--slate-50);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+}
+.sub-panel h3 { font-size: 19px; letter-spacing: -0.02em; margin-bottom: 6px; }
+.sub-panel > p { font-size: 14px; color: var(--slate-600); margin-bottom: 14px; }
+.sub-panel .table-scroll { margin-top: auto; max-height: none; }
+.ablation-figs { margin-top: 20px; align-items: start; }
+.ablation-figs .figure-btn { padding: 14px; }
 
 .dims { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 22px; }
 .dims article {
@@ -447,8 +488,16 @@ thead th:first-child { z-index: 3; background: var(--slate-50); }
   font-weight: 600;
   padding: 0;
   display: inline-flex;
-  align-items: center;
-  gap: 4px;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+  line-height: 1.2;
+}
+.sort-btn .submode {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--slate-400);
 }
 .sort-btn[aria-sort="descending"] .arrow::after,
 .sort-btn[aria-sort="ascending"] .arrow::after { content: ""; }
