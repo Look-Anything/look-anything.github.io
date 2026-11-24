@@ -571,6 +571,7 @@ tr.highlight td:first-child { background: #dbeafe; }
 .switcher + .switcher, .block-title { margin-top: 48px; }
 .block-title { font-size: 22px; letter-spacing: -0.02em; margin-bottom: 6px; }
 .block-title + p { color: var(--slate-600); margin-bottom: 16px; max-width: 760px; }
+.block-title + p.bench-note { max-width: 920px; }
 .tabs {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
