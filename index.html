@@ -3,496 +3,1007 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="LookAnything: A Foundation Model for Holistic Gaze Following — unifying diverse gaze-centric localization, description, and reasoning tasks with the 311K HoliGaze dataset and benchmark and real-world Unitree G1 deployment.">
-  <meta name="theme-color" content="#f8fafc">
   <title>LookAnything: A Foundation Model for Holistic Gaze Following</title>
-  <link rel="icon" href="assets/logo.png">
+  <meta name="description" content="LookAnything: A 2B foundation model and the 311K HoliGaze dataset & benchmark for holistic embodied gaze following across 9 tasks and 5 capability dimensions.">
+  <meta property="og:title" content="LookAnything: A Foundation Model for Holistic Gaze Following">
+  <meta property="og:description" content="Unifying multimodal gaze target/source grounding, 3D spatial orientation, mutual eye contact, and answerability verification in a single 2B foundation model.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://look-anything.github.io/">
+  <meta property="og:image" content="https://look-anything.github.io/assets/posters/hero.jpg">
+
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <a class="skip-link" href="#overview">Skip to content</a>
-  <header class="site-header">
-    <div class="container nav">
-      <a class="brand" href="#overview">
-        <span class="brand-mark" aria-hidden="true">L</span>
-        LookAnything
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- Sticky Editorial Navigation -->
+  <nav class="site-nav" aria-label="Primary">
+    <div class="nav-inner">
+      <a class="nav-brand" href="#top">
+        <span class="nav-brand-mark" aria-hidden="true">L</span>
+        <span>LookAnything</span>
+        <span class="nav-brand-tag">Preprint 2026</span>
       </a>
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
-      <nav class="nav-links" id="nav-links" aria-label="Main">
+      <div class="nav-links" id="nav-links">
         <a href="#overview">Overview</a>
-        <a href="#model">Model</a>
         <a href="#holigaze">HoliGaze</a>
-        <a href="#results">Results</a>
-        <a href="#real-world">Real world</a>
-      </nav>
+        <a href="#model">Model</a>
+        <a href="#results">Leaderboard</a>
+        <a href="#ablations">Ablations</a>
+        <a href="#real-world">Real-World</a>
+        <a href="#bibtex">BibTeX</a>
+        <a href="#demo" class="nav-cta">Watch Demo →</a>
+      </div>
     </div>
-  </header>
+  </nav>
 
-  <main id="overview">
-    <section class="hero">
+  <main id="main">
+    <!-- ==================== HERO ==================== -->
+    <header class="hero" id="top">
       <div class="container">
-        <img class="logo" src="assets/logo.png" width="1015" height="559" alt="LookAnything">
-        <h1>A Foundation Model for<br> Holistic Gaze Following</h1>
-        <div class="authors" aria-label="Authors">
-          <span>Jiayu Tang<sup>1</sup></span>
-          <span>Yuchen Zhou<sup>1</sup></span>
-          <span>Hongsheng Wu<sup>2</sup></span>
-          <span>Hanjing Ye<sup>3</sup></span>
-          <span>Ke Huang<sup>1</sup></span>
-          <span>Cheng Wang<sup>1</sup></span>
-          <span>Yuqin Dai<sup>4</sup></span>
-          <span>Yufei Huang<sup>5</sup></span>
-          <span>Yonggen Ling<sup>5</sup></span>
-          <span>Chao Gou<sup>1</sup></span>
+        <div class="hero-eyebrow">
+          <span class="hero-eyebrow-dot"></span>
+          <span>Foundation Model &amp; Holistic Benchmark · Embodied Gaze Following</span>
         </div>
-        <div class="affiliations" aria-label="Affiliations">
-          <span><sup>1</sup>Sun Yat-sen University</span>
-          <span><sup>2</sup>Xiamen University</span>
-          <span><sup>3</sup>Southern University of Science and Technology</span>
-          <span><sup>4</sup>Tsinghua University</span>
-          <span><sup>5</sup>Tencent</span>
-        </div>
-        <p class="lede">LookAnything unifies diverse gaze-centric tasks for holistic gaze following within a single multimodal framework. By internalizing gaze priors via learnable queries and large-scale multi-task, cross-domain training, it eliminates external auxiliary inputs and flexibly generates points, boxes, heatmaps, and natural language across localization, description, and reasoning.</p>
-        <div class="hero-actions">
-          <a class="btn primary" href="#reel">Watch video</a>
-          <a class="btn" href="#model">Model</a>
-          <a class="btn" href="#holigaze">HoliGaze</a>
-          <a class="btn" href="#results">Results</a>
-          <a class="btn" href="#real-world">Real world</a>
-        </div>
-        <div class="stats">
-          <article class="stat"><b>311K</b><span>Q&amp;A pairs</span><small>303K corpus + 8K verified bench</small></article>
-          <article class="stat"><b>9</b><span>Gaze-centric tasks</span><small>Across 5 capability dimensions</small></article>
-          <article class="stat"><b>2B</b><span>Compact scale</span><small>Points, boxes, heatmaps, language</small></article>
-          <article class="stat"><b>33</b><span>VLMs outperformed</span><small>0.852 MCQ · 0.518 openQA</small></article>
-        </div>
-      </div>
-    </section>
 
-    <section class="reel" id="reel">
-      <div class="container">
-        <div class="stage">
-          <video id="hero-video" poster="assets/posters/hero.jpg?v=4" preload="none" playsinline controls controlslist="nodownload" src="assets/videos/hero.mp4?v=4" aria-label="LookAnything real-world demo video"></video>
-          <button class="play-btn" id="hero-play" type="button" aria-label="Play full demo"><i aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></i></button>
-          <p class="media-error">This video could not be loaded.</p>
+        <div class="hero-title-wrap">
+          <img class="hero-logo" src="assets/logo.png" width="320" height="72" alt="LookAnything logo">
+          <h1 class="hero-title">
+            <span class="title-line"><span class="acronym">LookAnything</span>: A Foundation Model for</span>
+            <span class="title-line">Holistic Gaze Following</span>
+          </h1>
         </div>
-        <p class="reel-caption">Deployed on a Unitree G1 robot in real-world environments, LookAnything performs holistic gaze following from an egocentric perspective—covering human–robot interaction, shopping assistance, and tabletop settings across point, box, heatmap, and language outputs under both static and moving viewpoints.</p>
-      </div>
-    </section>
 
-    <section class="section">
-      <div class="container">
-        <div class="section-head">
-          <p class="eyebrow">01 / Overview</p>
-          <h2>Unifying diverse gaze-centric tasks for holistic gaze following.</h2>
-          <p>Existing specialist methods employ customized architectures that rely on auxiliary inputs like head crops or depth maps—introducing cascading errors and inference overhead—and remain confined to single-domain heatmap prediction lacking instance-level semantics. Recent VLM adaptations remain narrow in task scope and underexploit gaze-centric priors. LookAnything bridges this gap within a single foundation model.</p>
+        <p class="hero-subtitle">
+          Bridging low-level 2D point regression and open-ended social scene reasoning — unifying
+          <strong>flexible multimodal prompts</strong>, <strong>bidirectional gaze grounding</strong>,
+          <strong>3D spatial awareness</strong>, and <strong>answerability verification</strong> in a single <strong>2B</strong> model.
+        </p>
+
+        <!-- Authors & Institutional Affiliations -->
+        <div class="authors-block">
+          <div class="author-list">
+            <span class="author-item">Jiayu Tang<sup>1</sup></span>
+            <span class="author-item"><a href="https://yuchen2199.github.io" target="_blank" rel="noopener" class="author-link">Yuchen Zhou</a><sup>1</sup></span>
+            <span class="author-item">Hongsheng Wu<sup>2</sup></span>
+            <span class="author-item"><a href="https://medlartea.github.io/" target="_blank" rel="noopener" class="author-link">Hanjing Ye</a><sup>3</sup></span>
+            <span class="author-item">Ke Huang<sup>1</sup></span>
+            <span class="author-item">Cheng Wang<sup>1</sup></span>
+            <span class="author-item">Yuqin Dai<sup>4</sup></span>
+            <span class="author-item">Yufei Huang<sup>5</sup></span>
+            <span class="author-item"><a href="https://ygling2008.github.io" target="_blank" rel="noopener" class="author-link">Yonggen Ling</a><sup>5</sup></span>
+            <span class="author-item">Chao Gou<sup>1</sup></span>
+          </div>
+          <div class="affiliation-line">
+            <span><sup>1</sup>Sun Yat-sen University</span>
+            <span><sup>2</sup>Xiamen University</span>
+            <span><sup>3</sup>Southern University of Science and Technology</span>
+            <span><sup>4</sup>Tsinghua University</span>
+            <span><sup>5</sup>Tencent</span>
+          </div>
         </div>
-        <div class="two">
-          <article class="card problem">
-            <p class="index">The limitation</p>
-            <h3>Cascading external inputs &amp; narrow outputs.</h3>
-            <p>Pre-extracted head crops and external depth estimators add runtime overhead and compounding errors. Coarse heatmaps carry no instance-level semantics, so a single specialist cannot describe attended targets, ground observers, or refuse ill-posed queries.</p>
-          </article>
-          <article class="card idea">
-            <p class="index">The approach</p>
-            <h3>Learnable gaze-prior queries in latent space.</h3>
-            <p>We introduce learnable gaze-prior queries that interact with visual features to implicitly internalize scene depth, source-head grounding, and target spatial geometry in the latent space—supporting points, bounding boxes, heatmaps, and language without external auxiliary inputs.</p>
-          </article>
+
+        <!-- Resource & Action Items (arXiv, Code, Dataset, Model, Demo, Leaderboard, Cite) -->
+        <div class="cta-row">
+          <span class="btn btn-muted" title="arXiv preprint coming soon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            arXiv <span class="pill-soon">Soon</span>
+          </span>
+
+          <a href="https://github.com/Look-Anything" target="_blank" rel="noopener" class="btn" title="Official GitHub Organization — code release coming soon">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.79-.01 3.17 0 .31.21.68.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z"/></svg>
+            Code <span class="pill-soon">Soon</span>
+          </a>
+
+          <a href="#holigaze" class="btn" title="Explore HoliGaze Dataset &amp; Benchmark — release coming soon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+            Dataset <span class="pill-soon">Soon</span>
+          </a>
+
+          <a href="#model" class="btn" title="LookAnything-2B architecture &amp; weights — release coming soon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+            Model <span class="pill-soon">Soon</span>
+          </a>
+
+          <a href="#demo" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+            Watch Demo
+          </a>
+
+          <a href="#results" class="btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            Leaderboard
+          </a>
+
+          <a href="#bibtex" class="btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 11h-4a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v6c0 2.667-1.333 4.333-4 5"/><path d="M19 11h-4a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v6c0 2.667-1.333 4.333-4 5"/></svg>
+            Cite (BibTeX)
+          </a>
         </div>
-        <figure class="paper-figure">
-          <button class="figure-btn" type="button" data-zoom="assets/figs/overview.webp?v=4">
-            <img src="assets/figs/overview.webp?v=4" width="3600" height="1638" alt="Overview of LookAnything and HoliGaze: scalable data engine, generalist foundation model with learnable gaze-prior queries, and evaluation on HoliGaze-Bench and conventional gaze-following benchmarks.">
-            <span class="zoom-hint">Expand</span>
+
+        <!-- 4 Key Quantitative Stats -->
+        <div class="stats-ribbon">
+          <div class="stat-card s-target">
+            <div class="stat-value">311K</div>
+            <div class="stat-label">HoliGaze Q&amp;A Pairs</div>
+            <div class="stat-sub">120K images across 5 diverse benchmarks + 4,949 human-verified test pairs</div>
+          </div>
+          <div class="stat-card s-source">
+            <div class="stat-value">9 Tasks</div>
+            <div class="stat-label">5 Capability Dimensions</div>
+            <div class="stat-sub">Target &amp; source grounding, 3D depth/direction, eye contact &amp; refusal</div>
+          </div>
+          <div class="stat-card s-model">
+            <div class="stat-value">2B</div>
+            <div class="stat-label">LookAnything Model</div>
+            <div class="stat-sub">Explicit 3D geometry injection + block-wise structured attention</div>
+          </div>
+          <div class="stat-card s-bench">
+            <div class="stat-value">33 VLMs</div>
+            <div class="stat-label">Outperformed on HoliGaze-Bench</div>
+            <div class="stat-sub"><strong>0.518</strong> openQA &amp; <strong>0.852</strong> MCQ — surpassing 30B+ &amp; closed MLLMs</div>
+          </div>
+        </div>
+
+        <!-- Figure 1 Teaser -->
+        <figure class="fig-frame">
+          <button class="fig-img-btn" type="button" data-zoom="assets/figs/overview.webp" aria-label="Zoom Figure 1">
+            <img src="assets/figs/overview.webp" width="3600" height="1638" alt="Figure 1: Overview of Holistic Gaze Following, HoliGaze dataset, LookAnything model, and benchmark performance.">
+            <span class="zoom-badge">Click to zoom</span>
           </button>
-          <figcaption><strong>Overview.</strong> (a) Left: A scalable data engine transforms heterogeneous annotations from diverse scenarios into unified Q&amp;A pairs to build HoliGaze. (b) Bottom: LookAnything introduces learnable gaze-prior queries to eliminate external auxiliary inputs and flexibly generate points, boxes, heatmaps, and language. (c) Right: LookAnything outperforms 33 leading VLMs across 9 tasks on HoliGaze-Bench (0.852 MCQ, 0.518 openQA) while achieving 0.109 average L₂ across 5 conventional gaze-following benchmarks.</figcaption>
+          <figcaption class="fig-caption">
+            <strong>Figure 1 · Holistic Gaze Following at a Glance.</strong>
+            <strong>(a)</strong> Unlike conventional gaze following restricted to rigid bounding-box prompts and single 2D point outputs, <em>Holistic Gaze Following</em> supports flexible visual/textual prompts and diverse outputs (points, boxes, heatmaps, and open-ended descriptions) across target, source, spatial, social, and answerability tasks.
+            <strong>(b)</strong> Our <strong>HoliGaze</strong> dataset (311K Q&amp;As) and <strong>LookAnything</strong> (2B) foundation model outperform 33 closed-source, general-purpose, and embodied VLMs while achieving state-of-the-art accuracy on conventional specialist benchmarks.
+            <em>(Click any figure to inspect at full resolution.)</em>
+          </figcaption>
         </figure>
-      </div>
-    </section>
 
-    <section class="section tint" id="model">
+        <!-- Real-World Unitree G1 Demo Reel -->
+        <div class="demo-showcase" id="demo">
+          <div class="demo-top">
+            <div class="demo-title">
+              <span>Real-World Embodied Deployment · Unitree G1 Humanoid Robot</span>
+            </div>
+            <span class="demo-badge">Egocentric Stereo RGB · Single 2B Checkpoint · Zero Fine-Tuning</span>
+          </div>
+          <div class="stage">
+            <video id="hero-video" controls playsinline preload="metadata" poster="assets/posters/hero.jpg">
+              <source src="assets/videos/hero.mp4" type="video/mp4">
+            </video>
+            <button class="play-btn" id="hero-play" type="button" aria-label="Play LookAnything real-world demo video">
+              <i><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></i>
+            </button>
+            <p class="media-error" role="status">Video playback failed. Please reload or open <code>assets/videos/hero.mp4</code> directly.</p>
+          </div>
+          <p class="reel-caption">
+            <strong>Live Real-World Evaluation:</strong> Deployed directly on a <strong>Unitree G1</strong> humanoid robot across cluttered retail aisles, multi-person social interactions, and dynamic tabletop manipulation, <strong>LookAnything</strong> handles arbitrary visual/text prompts and predicts points, boxes, heatmaps, and semantic answers from a single unified model.
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <!-- ==================== 01 · OVERVIEW & ABSTRACT ==================== -->
+    <section class="section section-alt" id="overview">
       <div class="container">
-        <div class="section-head">
-          <p class="eyebrow">02 / Model</p>
-          <h2>Instruction-conditioned autoregressive generation.</h2>
-          <p>Built upon Qwen3-VL-2B, LookAnything appends learnable continuous queries Q = [Q<sup>d</sup>, Q<sup>h</sup>, Q<sup>g</sup>] to the multimodal input sequence to learn gaze-context representations via auxiliary geometric supervision. The language head autoregressively decodes localization, description, and reasoning in a unified token space, while auxiliary branches can be selectively skipped during inference.</p>
+        <div class="section-header">
+          <span class="section-kicker">01 · Motivation &amp; Abstract</span>
+          <h2 class="section-title">From Narrow 2D Point Regression to Holistic Gaze Understanding</h2>
+          <p class="section-lead">
+            Embodied agents operating alongside humans must interpret attention flexibly in 3D physical space rather than merely mapping a pre-cropped head box to a 2D pixel.
+          </p>
         </div>
-        <figure>
-          <button class="figure-btn" type="button" data-zoom="assets/figs/model.webp?v=4">
-            <img src="assets/figs/model.webp?v=4" width="3600" height="1424" alt="LookAnything architecture overview, with structurally disentangled block-wise attention mask at top-left, gaze-aware supervision via MAE decoders, and unified language output space.">
-            <span class="zoom-hint">Expand</span>
-          </button>
-          <figcaption><strong>Model architecture overview.</strong> Built on Qwen3-VL-2B with a LoRA-adapted vision encoder (r = 16, α = 32) and k = 9 query tokens per prior group. <strong>Top-left:</strong> Structurally disentangled block-wise attention isolates functional specialization by preventing heterogeneous query groups from attending to one another. Auxiliary decoders can be selectively skipped at inference.</figcaption>
-        </figure>
-        <div class="two" style="margin-top: 20px;">
-          <article class="card">
-            <p class="index">Scene Depth Estimation · Q<sup>d</sup></p>
-            <h3>Relative monocular depth</h3>
-            <p>A lightweight MAE-style decoder projects depth query states into a 64×64 relative monocular depth map, supervised with a scale-invariant logarithmic (SiLog) loss to capture 3D structural layout between observer and target.</p>
-          </article>
-          <article class="card">
-            <p class="index">Source Head Grounding · Q<sup>h</sup></p>
-            <h3>Binary source-head mask</h3>
-            <p>An MAE-style decoder decodes head query states into a binary source-head mask, optimized via Binary Cross-Entropy and soft Dice loss to reliably anchor the observer under foreground–background imbalance.</p>
-          </article>
-          <article class="card">
-            <p class="index">Target Spatial Prediction · Q<sup>g</sup></p>
-            <h3>Heatmap, point, and box</h3>
-            <p>Via cross-attention with contextualized visual features, gaze queries decode a dense gaze heatmap (KL + MSE) while dedicated regression heads predict a normalized 2D point (Huber) and bounding box (L1 + GIoU).</p>
-          </article>
-          <article class="card idea">
-            <p class="index">Block-wise Structured Attention · Top-left</p>
-            <h3>Structurally disentangled queries</h3>
-            <p>Each query group independently attends to the shared image–prompt context and itself while remaining isolated from other query groups, preventing shortcut interference; downstream answer tokens attend jointly to all groups.</p>
-          </article>
+
+        <div class="tldr-banner">
+          <span class="tldr-pill">TL;DR</span>
+          <p>
+            Existing gaze-following specialists rely on rigid head-box inputs and single 2D point outputs, whereas frontier VLMs suffer from severe 3D line-of-sight blind spots and hallucinate targets on unanswerable queries. We introduce <strong>HoliGaze</strong> (<strong>311K</strong> Q&amp;As across <strong>9 tasks</strong>) and <strong>LookAnything</strong>, a <strong>2B</strong> foundation model with learnable geometric queries and block-wise structured attention that surpasses <strong>33 VLMs</strong> on <strong>HoliGaze-Bench</strong> and sets new records across specialist and OOD surgical/robotics benchmarks.
+          </p>
+        </div>
+
+        <div class="abstract-card">
+          <p>
+            Gaze following, which infers where a person is looking in a scene, is a fundamental cue for nonverbal human communication and human-robot interaction. However, existing methods remain constrained by rigid head-bounding-box prompts and single 2D point outputs, limiting their applicability in open-ended, interactive scenarios. Meanwhile, current vision-language models (VLMs) struggle with 3D spatial reasoning and gaze target grounding due to the lack of fine-grained geometric awareness and comprehensive supervision. To bridge this gap, we formulate <strong>Holistic Gaze Following</strong>, unifying flexible multimodal prompting with comprehensive gaze reasoning across target, source, spatial, social, and answerability dimensions. To power this paradigm, we construct <strong>HoliGaze</strong> via an automated multi-stage data engine, yielding a large-scale dataset of <strong>311K</strong> Q&amp;A pairs across nine distinct tasks alongside a rigorously human-verified evaluation benchmark, <strong>HoliGaze-Bench</strong>. Building upon this foundation, we propose <strong>LookAnything</strong>, an end-to-end gaze foundation model that injects explicit geometric priors via learnable scene depth, source head, and target spatial queries. Furthermore, we design a structurally disentangled block-wise attention mask that enforces causal reasoning from global scene geometry and source cues to target representations while preventing spurious cross-stream interference. Extensive experiments demonstrate that LookAnything outperforms <strong>33</strong> open-source and proprietary VLMs on HoliGaze-Bench while achieving state-of-the-art performance on conventional gaze-following benchmarks, strong zero-shot generalization on out-of-distribution domains, and robust real-world deployment on a humanoid robot.
+          </p>
+        </div>
+
+        <div class="contrib-grid">
+          <div class="contrib-card">
+            <div class="contrib-num">CONTRIBUTION 01</div>
+            <h3>Holistic Paradigm &amp; HoliGaze</h3>
+            <p>Formulates <em>Holistic Gaze Following</em> across 5 capability dimensions and 9 tasks, supported by an automated 4-stage data engine producing <strong>311K</strong> Q&amp;A pairs and the human-verified <strong>HoliGaze-Bench</strong> (4,949 pairs).</p>
+          </div>
+          <div class="contrib-card">
+            <div class="contrib-num">CONTRIBUTION 02</div>
+            <h3>Explicit Geometric Query Injection</h3>
+            <p>Introduces learnable scene depth (<code>Q<sup>d</sup></code>), source head (<code>Q<sup>h</sup></code>), and target spatial (<code>Q<sup>g</sup></code>) queries coupled with a structurally disentangled block-wise attention mask for causal 3D line-of-sight reasoning.</p>
+          </div>
+          <div class="contrib-card">
+            <div class="contrib-num">CONTRIBUTION 03</div>
+            <h3>Unified SOTA &amp; Humanoid Deployment</h3>
+            <p>Surpasses 33 general-purpose, embodied, and proprietary VLMs with only <strong>2B</strong> parameters, matches or beats task-specific specialists on 5 conventional benchmarks, transfers zero-shot to OOD domains, and runs on a Unitree G1 robot.</p>
+          </div>
         </div>
       </div>
     </section>
 
+    <!-- ==================== 02 · HOLIGAZE DATASET ==================== -->
     <section class="section" id="holigaze">
       <div class="container">
-        <div class="section-head">
-          <p class="eyebrow">03 / HoliGaze</p>
-          <h2>A comprehensive dataset and benchmark for holistic gaze following.</h2>
-          <p>HoliGaze standardizes heterogeneous annotations from 8 source datasets into 311K Q&amp;A pairs across 5 capability dimensions and 9 gaze-centric tasks—comprising HoliGaze-Corpus (303K training samples) and HoliGaze-Bench (8K human-verified evaluation pairs over 6,143 images).</p>
-        </div>
-        <figure>
-          <button class="figure-btn" type="button" data-zoom="assets/figs/taxonomy.webp?v=4">
-            <img src="assets/figs/taxonomy.webp?v=4" width="3200" height="1580" alt="Task taxonomy and Q&A examples of HoliGaze across 5 capability dimensions and 9 gaze-centric tasks in both MCQ and openQA formats.">
-            <span class="zoom-hint">Expand</span>
-          </button>
-          <figcaption><strong>Task taxonomy and Q&amp;A examples of HoliGaze.</strong> HoliGaze covers 5 capability dimensions (color-coded) and 9 gaze-centric tasks across both multiple-choice Q&amp;A (MCQ) and open-ended Q&amp;A (openQA), with a balanced 1:1 openQA-to-MCQ ratio in HoliGaze-Bench.</figcaption>
-        </figure>
-        <div class="dims">
-          <article>
-            <p class="task-names">GTL · GTD</p>
-            <h3>Gaze target understanding</h3>
-            <p>Given a text or box reference of the gaze source person, ground the target as a 2D point (GTL-T2P) or bounding box (GTL-T2B, plus GTL-B2P in training), or describe the attended entity (GTD).</p>
-          </article>
-          <article>
-            <p class="task-names">GSL · GSD</p>
-            <h3>Gaze source understanding</h3>
-            <p>Given a textual reference to the gaze target, predict head bounding boxes for all observers (GSL) or describe their visual attributes (GSD).</p>
-          </article>
-          <article>
-            <p class="task-names">GDO · GDR</p>
-            <h3>Gaze spatial reasoning</h3>
-            <p>Determine whether the observer’s head is closer to or farther from the camera than the target (GDO), and classify gaze into four camera-relative directions (GDR).</p>
-          </article>
-          <article>
-            <p class="task-names">GCD</p>
-            <h3>Gaze social interaction</h3>
-            <p>Binary MCQ asking whether a specified person in the scene is making direct eye contact with the camera wearer.</p>
-          </article>
-          <article>
-            <p class="task-names">ARR · PV</p>
-            <h3>Gaze query answerability</h3>
-            <p>Refuse ill-posed queries when a referring expression matches multiple entities (ARR) or when the gaze target lies outside the frame (PV).</p>
-          </article>
+        <div class="section-header">
+          <span class="section-kicker">02 · The HoliGaze Dataset &amp; Benchmark</span>
+          <h2 class="section-title">311K Multi-Task Q&amp;A Pairs Across Five Capability Dimensions</h2>
+          <p class="section-lead">
+            Constructed from 120K diverse images across GazeFollow, VAT, ChildPlay, GazeHOI, and GOO-Real via a unified four-stage annotation and verification pipeline.
+          </p>
         </div>
 
-        <figure class="paper-figure">
-          <button class="figure-btn" type="button" data-zoom="assets/figs/data_engine.webp?v=4">
-            <img src="assets/figs/data_engine.webp?v=4" width="3200" height="1525" alt="HoliGaze data engine and dataset statistics: schema unifying, annotation completion, Q&A generation, human verification, and HoliGaze-Bench sunburst and Sankey distributions.">
-            <span class="zoom-hint">Expand</span>
+        <!-- Figure 2: Task Taxonomy -->
+        <figure class="fig-frame">
+          <button class="fig-img-btn" type="button" data-zoom="assets/figs/taxonomy.webp" aria-label="Zoom Figure 2">
+            <img src="assets/figs/taxonomy.webp" width="3200" height="1580" loading="lazy" alt="Figure 2: Taxonomy of the 9 Holistic Gaze Following tasks across 5 dimensions.">
+            <span class="zoom-badge">Click to zoom</span>
           </button>
-          <figcaption><strong>Data engine and dataset statistics of HoliGaze.</strong> Native train/test splits are strictly preserved to prevent data leakage. HoliGaze-Bench undergoes instance-level human verification, yielding a low 0.70% modification rate.</figcaption>
+          <figcaption class="fig-caption">
+            <strong>Figure 2 · Taxonomy of Holistic Gaze Following.</strong>
+            Representative examples of the nine tasks organized into five complementary capability dimensions:
+            <strong>Target</strong> (<code>GTL</code>, <code>GTD</code>),
+            <strong>Source</strong> (<code>GSL</code>, <code>GSD</code>),
+            <strong>Spatial</strong> (<code>GDO</code>, <code>GDR</code>),
+            <strong>Social</strong> (<code>GCD</code>), and
+            <strong>Answerability</strong> (<code>ARR</code>, <code>PV</code>).
+          </figcaption>
         </figure>
-        <div class="steps">
-          <article><strong>1. Schema Unifying</strong><p>Unify heterogeneous gaze records from 8 academic datasets into a shared representation schema.</p></article>
-          <article><strong>2. Annotation Completion</strong><p>Complete missing head masks, scene depth, and referring expressions with SAM3, Depth Anything v3, and Gemini.</p></article>
-          <article><strong>3. Q&amp;A Generation</strong><p>Instantiate templates into openQA and MCQ pairs, synthesizing hard distractors via entity expansion, attribute perturbation, and box permutation.</p></article>
-          <article><strong>4. Human Verification</strong><p>Preserve native splits and verify all 8K HoliGaze-Bench instances human-by-human (0.70% modified).</p></article>
-        </div>
-        <div class="metric-row">
-          <div><b>311K</b><span>Q&amp;A pairs</span></div>
-          <div><b>171K</b><span>Images</span></div>
-          <div><b>187K</b><span>Gaze interactions</span></div>
-          <div><b>8</b><span>Source datasets</span></div>
-          <div><b>0.70%</b><span>Bench edits</span></div>
+
+        <!-- Interactive 9-Task Explorer -->
+        <div class="ontology-panel">
+          <div class="ontology-top">
+            <strong>Interactive Task &amp; Metric Explorer (9 Tasks · 10 Evaluation Sub-Tasks)</strong>
+            <span>Filter by capability dimension to inspect prompt-output formulation, metric, and benchmark share</span>
+          </div>
+          <div class="tab-bar" id="taxonomy-tabs">
+            <button class="tab-pill active" type="button" data-dim="all">All Dimensions (10)</button>
+            <button class="tab-pill" type="button" data-dim="target">Target Understanding (3)</button>
+            <button class="tab-pill" type="button" data-dim="source">Source Understanding (2)</button>
+            <button class="tab-pill" type="button" data-dim="spatial">3D Spatial Reasoning (2)</button>
+            <button class="tab-pill" type="button" data-dim="social">Social Interaction (1)</button>
+            <button class="tab-pill" type="button" data-dim="answer">Answerability &amp; Refusal (2)</button>
+          </div>
+          <div class="ontology-grid" id="taxonomy-grid"></div>
         </div>
 
-        <div class="table-scroll" style="margin-top: 28px; max-height: none;">
-          <table class="compare">
-            <caption class="table-notes" style="caption-side: bottom; text-align: left; padding: 12px 14px 4px;">Samples count instances in native formats (gaze annotations or Q&amp;A pairs). HoliGaze is the only dataset simultaneously supporting both referring types, all three output modalities, and both Q&amp;A formats across 9 tasks.</caption>
-            <thead>
-              <tr>
-                <th>Dataset</th>
-                <th>Samples</th>
-                <th>Tasks</th>
-                <th>Text ref.</th>
-                <th>Box ref.</th>
-                <th>Point</th>
-                <th>Box</th>
-                <th>Text</th>
-                <th>MCQ</th>
-                <th>openQA</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td>GazeFollow <span class="venue">NeurIPS 2015</span></td><td>130K</td><td>1</td><td><span class="mark no">–</span></td><td><span class="mark yes">Yes</span></td><td><span class="mark yes">Yes</span></td><td><span class="mark no">–</span></td><td><span class="mark no">–</span></td><td><span class="mark no">–</span></td><td><span class="mark no">–</span></td></tr>
-              <tr><td>VideoCoAtt <span class="venue">CVPR 2018</span></td><td>138K</td><td>1</td><td><span class="mark no">–</span></td><td><span class="mark no">–</span></td><td><span class="mark yes">Yes</span></td><td><span class="mark yes">Yes</span></td><td><span class="mark no">–</span></td><td><span class="mark no">–</span></td><td><span class="mark no">–</span></td></tr>
-              <tr><td>VAT <span class="venue">CVPR 2020</span></td><td>165K</td><td>2</td><td><span class="mark no">–</span></td><td><span class="mark yes">Yes</span></td><td><span class="mark yes">Yes</span></td><td><span class="mark no">–</span></td><td><span class="mark no">–</span></td><td><span class="mark no">–</span></td><td><span class="mark no">–</span></td></tr>
-              <tr><td>GOO <span class="venue">CVPRW 2021</span></td><td>172K</td><td>2</td><td><span class="mark no">–</span></td><td><span class="mark yes">Yes</span></td><td><span class="mark yes">Yes</span></td><td><span class="mark yes">Yes</span></td><td><span class="mark no">–</span></td><td><span class="mark no">–</span></td><td><span class="mark no">–</span></td></tr>
-              <tr><td>ChildPlay <span class="venue">ICCV 2023</span></td><td>258K</td><td>2</td><td><span class="mark no">–</span></td><td><span class="mark yes">Yes</span></td><td><span class="mark yes">Yes</span></td><td><span class="mark no">–</span></td><td><span class="mark no">–</span></td><td><span class="mark no">–</span></td><td><span class="mark no">–</span></td></tr>
-              <tr><td>GazeHOI <span class="venue">NeurIPS 2024</span></td><td>56K</td><td>2</td><td><span class="mark no">–</span></td><td><span class="mark yes">Yes</span></td><td><span class="mark yes">Yes</span></td><td><span class="mark no">–</span></td><td><span class="mark yes">Yes</span></td><td><span class="mark no">–</span></td><td><span class="mark no">–</span></td></tr>
-              <tr><td>VL4Gaze <span class="venue">arXiv 2025</span></td><td>489K</td><td>4</td><td><span class="mark yes">Yes</span></td><td><span class="mark no">–</span></td><td><span class="mark yes">Yes</span></td><td><span class="mark no">–</span></td><td><span class="mark yes">Yes</span></td><td><span class="mark no">–</span></td><td><span class="mark yes">Yes</span></td></tr>
-              <tr><td>Gaze-Co <span class="venue">CVPR 2026</span></td><td>120K</td><td>1</td><td><span class="mark yes">Yes</span></td><td><span class="mark no">–</span></td><td><span class="mark yes">Yes</span></td><td><span class="mark yes">Yes</span></td><td><span class="mark no">–</span></td><td><span class="mark no">–</span></td><td><span class="mark no">–</span></td></tr>
-              <tr class="highlight"><td>HoliGaze <span class="venue">Ours</span></td><td>311K</td><td>9</td><td><span class="mark yes">Yes</span></td><td><span class="mark yes">Yes</span></td><td><span class="mark yes">Yes</span></td><td><span class="mark yes">Yes</span></td><td><span class="mark yes">Yes</span></td><td><span class="mark yes">Yes</span></td><td><span class="mark yes">Yes</span></td></tr>
-            </tbody>
-          </table>
+        <!-- Figure 3: Data Engine -->
+        <figure class="fig-frame" style="margin-top:24px">
+          <button class="fig-img-btn" type="button" data-zoom="assets/figs/data_engine.webp" aria-label="Zoom Figure 3">
+            <img src="assets/figs/data_engine.webp" width="3200" height="1525" loading="lazy" alt="Figure 3: Overview of the 4-stage HoliGaze data curation engine.">
+            <span class="zoom-badge">Click to zoom</span>
+          </button>
+          <figcaption class="fig-caption">
+            <strong>Figure 3 · Four-Stage Automated Data Engine.</strong>
+            Starting from heterogeneous gaze datasets, our pipeline unifies annotations into an instance-centric schema, enriches missing 2D/3D cues via specialist vision models and MLLMs, synthesizes multi-task Q&amp;A pairs, and enforces strict human verification for <strong>HoliGaze-Bench</strong>.
+          </figcaption>
+        </figure>
+
+        <!-- 4 Stage Cards -->
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-num">Stage 01</div>
+            <h4>Schema Unifying</h4>
+            <p>Standardizes GazeFollow, VAT, ChildPlay, GazeHOI, and GOO-Real into a unified JSON schema indexing observer head boxes, 2D gaze points, and in/out-of-frame flags.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">Stage 02</div>
+            <h4>Annotation Completion</h4>
+            <p>Enriches scenes with <strong>SAM3</strong> target masks/boxes, <strong>Depth Anything v3</strong> metric depth maps, and <strong>Gemini</strong> referring expressions with ambiguity flags.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">Stage 03</div>
+            <h4>Multi-Task Q&amp;A Synthesis</h4>
+            <p>Instantiates <strong>306,496</strong> training Q&amp;A pairs and <strong>4,949</strong> test pairs across openQA and MCQ formats, including unanswerable out-of-frame and ambiguous queries.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">Stage 04</div>
+            <h4>Human Verification</h4>
+            <p>Every sample in <strong>HoliGaze-Bench</strong> is audited by human annotators, yielding only a <strong>0.70%</strong> modification/removal rate and high-fidelity ground truth.</p>
+          </div>
+        </div>
+
+        <!-- Split: Benchmark Task Quotas + Table 1 Dataset Comparison -->
+        <div class="comp-split">
+          <div class="card">
+            <span class="section-kicker" style="margin-bottom:4px">Benchmark Composition</span>
+            <h3 style="margin:0 0 6px;font-size:1.1rem;color:var(--ink-strong)">HoliGaze-Bench Task Distribution</h3>
+            <p style="margin:0;font-size:0.83rem;color:var(--ink-muted)">Stratified across 4,949 human-verified Q&amp;A pairs covering open-ended grounding, description, 3D spatial MCQs, and refusal verification.</p>
+            <div class="quota-bars" id="quota-bars"></div>
+            <div class="format-pills">
+              <span class="format-pill">Train: <b>306,496</b> Q&amp;As</span>
+              <span class="format-pill">Bench: <b>4,949</b> Q&amp;As</span>
+              <span class="format-pill">Images: <b>120K</b></span>
+              <span class="format-pill">Audit Edit Rate: <b>0.70%</b></span>
+            </div>
+          </div>
+
+          <div class="card" style="padding:20px">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+              <strong style="font-size:0.98rem;color:var(--ink-strong)">Table 1 · Comparison with Existing Gaze Datasets</strong>
+              <span style="font-size:0.76rem;color:var(--ink-muted)">Scroll horizontally if needed →</span>
+            </div>
+            <div class="table-scroll">
+              <table class="comp-table">
+                <thead>
+                  <tr>
+                    <th rowspan="2">Dataset</th>
+                    <th colspan="2" class="th-prof">Data Profile</th>
+                    <th colspan="2" class="th-ref">Ref. Mode</th>
+                    <th colspan="4" class="th-out">Output Modality</th>
+                    <th colspan="6" class="th-qa">Supported Q&amp;A Capabilities</th>
+                  </tr>
+                  <tr>
+                    <th>Scenes</th>
+                    <th>Scale</th>
+                    <th>Visual</th>
+                    <th>Text</th>
+                    <th>Point</th>
+                    <th>Box</th>
+                    <th>Mask</th>
+                    <th>Text</th>
+                    <th>Target</th>
+                    <th>Source</th>
+                    <th>Depth</th>
+                    <th>Dir.</th>
+                    <th>Contact</th>
+                    <th>Refusal</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>GazeFollow <span class="venue-tag">NIPS’15</span></td>
+                    <td>General</td><td>122K</td>
+                    <td class="ck-yes">✓</td><td class="ck-no">✗</td>
+                    <td class="ck-yes">✓</td><td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td>
+                    <td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td>
+                  </tr>
+                  <tr>
+                    <td>VideoAttentionTarget <span class="venue-tag">CVPR’20</span></td>
+                    <td>TV Shows</td><td>164K</td>
+                    <td class="ck-yes">✓</td><td class="ck-no">✗</td>
+                    <td class="ck-yes">✓</td><td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td>
+                    <td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td>
+                  </tr>
+                  <tr>
+                    <td>GOO-Real <span class="venue-tag">CVPRW’21</span></td>
+                    <td>Retail</td><td>9.6K</td>
+                    <td class="ck-yes">✓</td><td class="ck-no">✗</td>
+                    <td class="ck-yes">✓</td><td class="ck-yes">✓</td><td class="ck-yes">✓</td><td class="ck-no">✗</td>
+                    <td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td>
+                  </tr>
+                  <tr>
+                    <td>ChildPlay <span class="venue-tag">ICCV’23</span></td>
+                    <td>Child-Adult</td><td>258K</td>
+                    <td class="ck-yes">✓</td><td class="ck-no">✗</td>
+                    <td class="ck-yes">✓</td><td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td>
+                    <td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td>
+                  </tr>
+                  <tr>
+                    <td>GazeHOI <span class="venue-tag">CVPR’24</span></td>
+                    <td>Desktop HOI</td><td>205K</td>
+                    <td class="ck-yes">✓</td><td class="ck-no">✗</td>
+                    <td class="ck-yes">✓</td><td class="ck-yes">✓</td><td class="ck-no">✗</td><td class="ck-no">✗</td>
+                    <td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td>
+                  </tr>
+                  <tr>
+                    <td>Gaze-LLE <span class="venue-tag">CVPR’25</span></td>
+                    <td>General</td><td>122K</td>
+                    <td class="ck-yes">✓</td><td class="ck-no">✗</td>
+                    <td class="ck-yes">✓</td><td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td>
+                    <td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td>
+                  </tr>
+                  <tr>
+                    <td>InteractVLM <span class="venue-tag">CVPR’25</span></td>
+                    <td>Social</td><td>–</td>
+                    <td class="ck-no">✗</td><td class="ck-yes">✓</td>
+                    <td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-yes">✓</td>
+                    <td class="ck-yes">✓</td><td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td>
+                  </tr>
+                  <tr>
+                    <td>GazeVLM <span class="venue-tag">arXiv’25</span></td>
+                    <td>General</td><td>286K</td>
+                    <td class="ck-yes">✓</td><td class="ck-yes">✓</td>
+                    <td class="ck-yes">✓</td><td class="ck-yes">✓</td><td class="ck-no">✗</td><td class="ck-yes">✓</td>
+                    <td class="ck-yes">✓</td><td class="ck-yes">✓</td><td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td><td class="ck-no">✗</td>
+                  </tr>
+                  <tr class="ours-row">
+                    <td>HoliGaze (Ours)</td>
+                    <td>5 Domains</td><td>311K</td>
+                    <td class="ck-yes">✓</td><td class="ck-yes">✓</td>
+                    <td class="ck-yes">✓</td><td class="ck-yes">✓</td><td class="ck-yes">✓</td><td class="ck-yes">✓</td>
+                    <td class="ck-yes">✓</td><td class="ck-yes">✓</td><td class="ck-yes">✓</td><td class="ck-yes">✓</td><td class="ck-yes">✓</td><td class="ck-yes">✓</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="section tint" id="results">
-      <div class="container-wide">
-        <div class="section-head">
-          <p class="eyebrow">04 / Results</p>
-          <h2>Exceeding VLMs in breadth, matching specialists in precision.</h2>
-          <p>We evaluate LookAnything across 33 leading closed-source and open-source MLLMs on HoliGaze-Bench, against 11 representative specialists on 5 conventional gaze-following benchmarks, and zero-shot on 2 unseen out-of-domain datasets.</p>
+    <!-- ==================== 03 · LOOKANYTHING MODEL ==================== -->
+    <section class="section section-alt" id="model">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-kicker">03 · The LookAnything Architecture</span>
+          <h2 class="section-title">Explicit Geometric Queries &amp; Block-Wise Structured Attention</h2>
+          <p class="section-lead">
+            Built upon Qwen3-VL-2B, LookAnything augments vision-language token streams with dedicated 3D depth, source head, and target spatial latent tokens governed by a causal block-wise attention mask.
+          </p>
         </div>
 
-        <div class="controls">
-          <div class="filters" role="group" aria-label="Filter models">
-            <button class="filter-btn" type="button" data-filter="all" aria-pressed="true">All models</button>
-            <button class="filter-btn" type="button" data-filter="closed" aria-pressed="false">Closed-source</button>
-            <button class="filter-btn" type="button" data-filter="open" aria-pressed="false">Open-source</button>
+        <!-- Formulation Boxes -->
+        <div class="metrics-grid">
+          <div class="metric-box">
+            <h3>
+              <span>Unified Multimodal Sequence &amp; Generation</span>
+              <span class="metric-tag">Causal VLM + Latent Queries</span>
+            </h3>
+            <code class="formula-chip">X = [V ; P ; Qᵈ ; Qʰ ; Qᵍ ; Y],   pθ(Y | I, P, Qᵈ, Qʰ, Qᵍ)</code>
+            <p>Appends learnable scene depth (<code>N<sub>d</sub>=16</code>), source head (<code>N<sub>h</sub>=4</code>), and target spatial (<code>N<sub>g</sub>=4</code>) queries between multimodal prompt tokens <code>[V; P]</code> and autoregressive response tokens <code>Y</code>.</p>
           </div>
-          <label class="search">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg>
-            <input id="model-search" type="search" placeholder="Search models" aria-label="Search models">
-          </label>
-        </div>
-        <div class="table-scroll">
-          <table class="leaderboard">
-            <thead id="leaderboard-head"></thead>
-            <tbody id="leaderboard-body"></tbody>
-          </table>
-        </div>
-        <p class="table-notes"><strong>Results on HoliGaze-Bench.</strong> LookAnything (2B), trained on HoliGaze-Corpus (303K), achieves the best score across all 16 metrics. Overall best is in <strong>bold</strong> and strongest baseline is <span style="text-decoration: underline; text-underline-offset: 3px;">underlined</span>. Lower is better only for GTL T2P L₂. Click any column header to sort.</p>
-
-        <div class="findings">
-          <article>
-            <h3>Geometric grounding is the primary gap.</h3>
-            <p>Closed-source models like Gemini-3.7-Flash (0.770 Avg. MCQ) excel on descriptive MCQs, yet struggle on localization. Even the strongest open-source localizers (Qwen3.8-27B, 0.152 GTL-T2B mIoU) trail LookAnything (0.333) by large margins.</p>
-          </article>
-          <article>
-            <h3>Embodied pretraining does not automatically transfer.</h3>
-            <p>Embodied VLMs (e.g., RoboBrain) perform adequately on GCD and GDO, but remain weak on point and box localization—indicating that generic spatial or action-centric supervision cannot substitute for gaze-specific priors.</p>
-          </article>
-          <article>
-            <h3>Broad gains at a compact 2B scale.</h3>
-            <p>Compared to its Qwen3-VL-2B backbone, LookAnything cuts GTL-T2P L₂ from 0.387 to 0.094 while boosting Avg. MCQ from 0.465 to 0.852 and Avg. openQA from 0.087 to 0.518, outperforming 27B–38B generalists across every metric.</p>
-          </article>
+          <div class="metric-box">
+            <h3>
+              <span>End-to-End Multi-Task Geometric Supervision</span>
+              <span class="metric-tag">Auxiliary Decoders</span>
+            </h3>
+            <code class="formula-chip">ℒ_total = ℒ_AR + λ_d ℒ_depth + λ_h ℒ_head + λ_t ℒ_target</code>
+            <p>Jointly optimizes autoregressive token generation with dense metric depth reconstruction, observer head bounding-box regression, and multi-representation target decoding (heatmap + point + mask/box).</p>
+          </div>
         </div>
 
-        <figure class="paper-figure">
-          <button class="figure-btn" type="button" data-zoom="assets/figs/scale.webp?v=4">
-            <img src="assets/figs/scale.webp?v=4" width="2800" height="616" alt="HoliGaze-Bench performance versus model size across Avg. MCQ, Avg. openQA, GTL-T2B mIoU, and GSL mIoU, showing LookAnything (2B, red star) well above Qwen, InternVL, and best closed-source baselines.">
-            <span class="zoom-hint">Expand</span>
+        <!-- Figure 4: Model Architecture -->
+        <figure class="fig-frame">
+          <button class="fig-img-btn" type="button" data-zoom="assets/figs/model.webp" aria-label="Zoom Figure 4">
+            <img src="assets/figs/model.webp" width="3600" height="1424" loading="lazy" alt="Figure 4: Architecture of LookAnything with learnable geometric queries and block-wise attention mask.">
+            <span class="zoom-badge">Click to zoom</span>
           </button>
-          <figcaption><strong>HoliGaze-Bench performance vs. model size.</strong> Our 2B model (red star) lies well above the open-source scaling trend (Qwen, InternVL) and surpasses the strongest closed-source baseline across all four panels.</figcaption>
+          <figcaption class="fig-caption">
+            <strong>Figure 4 · Architecture of LookAnything.</strong>
+            Visual and prompt tokens are augmented with three groups of learnable geometric queries—scene depth (<code>Q<sup>d</sup></code>), source head (<code>Q<sup>h</sup></code>), and target spatial (<code>Q<sup>g</sup></code>)—decoded by lightweight auxiliary geometric heads during training. Top-left: the <strong>Structurally Disentangled Block-wise Attention Mask</strong> enforces a causal hierarchy from scene depth and observer head geometry to target localization and language generation while blocking cross-stream interference.
+          </figcaption>
         </figure>
 
-        <h3 class="block-title">Five conventional gaze-following benchmarks</h3>
-        <p>Official test splits of VAT, GazeFollow, ChildPlay, GazeHOI, and GOO-Real. LookAnything is evaluated across all benchmarks using a single set of weights without domain-specific fine-tuning (whereas specialist baselines are pre-trained on GazeFollow and individually fine-tuned per domain, or on GOO-Syn for GOO-Real), achieving the best overall performance with 0.109 average L₂ and 0.942 average AUC.</p>
-        <div class="table-scroll" style="margin-top: 16px;">
-          <table class="native">
+        <!-- 4 Architectural Mechanism Cards -->
+        <div class="mech-grid">
+          <div class="mech-card">
+            <div class="mech-tag">Query Stream 01 · Qᵈ (16 Tokens)</div>
+            <h3>Scene Depth Query &amp; DPT Decoder</h3>
+            <p>Extracts holistic 3D scene layout directly from multi-layer visual representations, supervised by scale-aware metric depth maps so line-of-sight projection respects physical occlusions and depth ordering.</p>
+          </div>
+          <div class="mech-card">
+            <div class="mech-tag">Query Stream 02 · Qʰ (4 Tokens)</div>
+            <h3>Source Head Query &amp; Box Regressor</h3>
+            <p>Explicitly anchors the referred observer’s head location and 3D orientation before target inference, bridging natural-language referring expressions with precise spatial gaze origins.</p>
+          </div>
+          <div class="mech-card">
+            <div class="mech-tag">Query Stream 03 · Qᵍ (4 Tokens)</div>
+            <h3>Target Spatial Query &amp; Multi-Head Decoder</h3>
+            <p>Aggregates scene depth and source head cues to decode dense 2D gaze heatmaps, sub-pixel target coordinates, and attended object masks, grounding downstream openQA and MCQ responses.</p>
+          </div>
+          <div class="mech-card highlight-border">
+            <div class="mech-tag">Causal Inductive Bias · Block-Wise Mask</div>
+            <h3>Structurally Disentangled Attention</h3>
+            <p>Prevents mutual interference between <code>Q<sup>d</sup></code> and <code>Q<sup>h</sup></code>, routes both causally into <code>Q<sup>g</sup></code>, and exposes the complete geometric chain <code>(Q<sup>d</sup> → Q<sup>h</sup> → Q<sup>g</sup>)</code> to autoregressive response tokens <code>Y</code>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 04 · LEADERBOARD & BENCHMARKS ==================== -->
+    <section class="section" id="results">
+      <div class="container-wide">
+        <div class="section-header">
+          <span class="section-kicker">04 · Comprehensive Evaluation</span>
+          <h2 class="section-title">HoliGaze-Bench Leaderboard &amp; Specialist Benchmarks</h2>
+          <p class="section-lead">
+            Zero-shot and fine-tuned evaluation across <strong>34 models</strong> spanning 9 proprietary MLLMs, 14 open general-purpose VLMs, 10 open embodied VLMs, and <strong>LookAnything (2B)</strong> across all 16 metrics.
+          </p>
+        </div>
+
+        <!-- Interactive Leaderboard Controls -->
+        <div class="lb-controls">
+          <div class="lb-row-top">
+            <div class="lb-filter-group" id="lb-cat-filters">
+              <button class="filter-chip active" type="button" data-cat="all">All Models (34)</button>
+              <button class="filter-chip" type="button" data-cat="closed"><span class="cat-dot" style="background:var(--cat-closed)"></span>Closed-Source (9)</button>
+              <button class="filter-chip" type="button" data-cat="general"><span class="cat-dot" style="background:var(--cat-general)"></span>Open General + Ours (15)</button>
+              <button class="filter-chip" type="button" data-cat="embodied"><span class="cat-dot" style="background:var(--cat-embodied)"></span>Open Embodied (10)</button>
+              <button class="filter-chip" type="button" data-cat="ours"><span class="cat-dot" style="background:var(--cat-ours)"></span>LookAnything (1)</button>
+            </div>
+            <div class="lb-right-tools">
+              <input type="search" id="lb-search" class="lb-search" placeholder="Search model (e.g. Gemini, GPT, Qwen, RoboBrain)..." aria-label="Search leaderboard models">
+            </div>
+          </div>
+
+          <div class="lb-view-bar">
+            <div class="lb-view-tabs">
+              <button class="view-tab active" type="button" data-view="all">All 16 Metrics</button>
+              <button class="view-tab" type="button" data-view="grounding">Localization &amp; Overview</button>
+              <button class="view-tab" type="button" data-view="description">Semantic Description</button>
+              <button class="view-tab" type="button" data-view="reasoning">3D Spatial, Social &amp; Refusal</button>
+            </div>
+            <span class="lb-count" id="lb-count-summary">Showing 34 of 34 models</span>
+          </div>
+        </div>
+
+        <!-- Table 2 Leaderboard -->
+        <div class="lb-table-wrap">
+          <table class="lb-table">
+            <thead id="lb-thead"></thead>
+            <tbody id="lb-tbody"></tbody>
+          </table>
+        </div>
+        <p class="table-notes">
+          <strong>Table 2 Notes:</strong> Click any metric column header to sort. <span class="val-best">Green highlight</span> denotes the best score and <span class="val-second">underlined blue</span> denotes the runner-up among currently displayed models. For <code>GTL-T2P L₂ ↓</code>, lower Euclidean distance is better; for all other 15 metrics, higher is better.
+        </p>
+
+        <!-- Interactive Multi-Model Capability Comparator -->
+        <div class="comparator-card">
+          <div class="comp-header">
+            <div>
+              <strong style="font-size:1.03rem;color:var(--ink-strong)">Interactive 5-Dimension Capability Profile Comparator</strong>
+              <p style="margin:3px 0 0;font-size:0.82rem;color:var(--ink-muted)">Compare any combination of the 34 evaluated models across Target, Source, 3D Spatial, Social (GCD), and Answerability dimensions.</p>
+            </div>
+            <div class="comp-toolbar">
+              <select id="comp-add-select" class="comp-select" aria-label="Add model to capability comparator"></select>
+              <div class="comp-presets">
+                <button type="button" class="preset-btn" data-preset="family4">Preset: Family Leaders</button>
+                <button type="button" class="preset-btn" data-preset="backbone">Preset: Qwen3-VL Scale</button>
+                <button type="button" class="preset-btn" data-preset="embodied">Preset: Embodied VLMs</button>
+                <button type="button" class="preset-btn" data-preset="reset">Minimal (2)</button>
+              </div>
+            </div>
+          </div>
+          <div class="comp-chips" id="comp-chips"></div>
+          <div class="profile-chart-grid">
+            <div class="svg-chart-box" id="comp-svg-container"></div>
+            <div class="comp-takeaway-list" id="comp-takeaway-list"></div>
+          </div>
+        </div>
+
+        <!-- 3 Key Empirical Insights + Figure 5 Scaling Plot -->
+        <div class="insights-cards">
+          <div class="insight-card">
+            <div class="insight-metric-highlight">0.518 vs. 0.298</div>
+            <h3>74% Relative Gain on Open-Ended Grounding</h3>
+            <p>Even the strongest proprietary model (<code>Gemini-3.7-Flash</code>, 0.298 openQA) struggles on fine-grained box grounding (<code>T2B mIoU</code> 0.038 vs. our <strong>0.333</strong>) and inverse source localization (<code>GSL mIoU</code> 0.047 vs. our <strong>0.610</strong>).</p>
+          </div>
+          <div class="insight-card">
+            <div class="insight-metric-highlight">0.805 / 0.932 F1</div>
+            <h3>Calibrated Refusal vs. VLM Hallucination</h3>
+            <p>Most open-source general and embodied VLMs score near <code>0.000</code> on Ambiguous Reference Recognition (<code>ARR</code>), blindly hallucinating boxes for ill-posed prompts, whereas LookAnything achieves <strong>0.805</strong> ARR F1 and <strong>0.932</strong> PV F1.</p>
+          </div>
+          <div class="insight-card">
+            <div class="insight-metric-highlight">2B Beats 38B</div>
+            <h3>Parameter Scale Alone Cannot Solve 3D Gaze</h3>
+            <p>Scaling open VLMs from 2B to 38B yields diminishing returns on 3D gaze geometry without explicit spatial priors. With only <strong>2B</strong> parameters, LookAnything outperforms 27B–38B open models across every task.</p>
+          </div>
+        </div>
+
+        <figure class="fig-frame">
+          <button class="fig-img-btn" type="button" data-zoom="assets/figs/scale.webp" aria-label="Zoom Figure 5">
+            <img src="assets/figs/scale.webp" width="2800" height="616" loading="lazy" alt="Figure 5: HoliGaze-Bench performance vs model parameter scale.">
+            <span class="zoom-badge">Click to zoom</span>
+          </button>
+          <figcaption class="fig-caption">
+            <strong>Figure 5 · Performance vs. Parameter Scale on HoliGaze-Bench.</strong>
+            Comparison of <strong>LookAnything (2B)</strong> against open-source general-purpose VLMs, embodied VLMs, and frontier closed-source MLLMs across model sizes, illustrating the decisive advantage of explicit geometric query supervision over raw parameter scaling.
+          </figcaption>
+        </figure>
+
+        <!-- Table 3: Conventional Specialist Benchmarks -->
+        <h3 class="sub-heading">State-of-the-Art on Five Conventional Gaze-Following Benchmarks</h3>
+        <p class="sub-lead">
+          Evaluated with a <strong>single unified checkpoint</strong> against dedicated gaze-following specialists across GazeFollow, VideoAttentionTarget (VAT), ChildPlay, GazeHOI, and GOO-Real (Table 3).
+        </p>
+        <div class="table-scroll">
+          <table class="comp-table native-table">
             <thead>
               <tr>
                 <th rowspan="2">Method</th>
-                <th class="group-head" colspan="2">Average</th>
-                <th class="group-head" colspan="2">VAT</th>
-                <th class="group-head" colspan="3">GazeFollow</th>
-                <th class="group-head" colspan="2">ChildPlay</th>
-                <th class="group-head" colspan="3">GazeHOI</th>
-                <th class="group-head" colspan="2">GOO-Real</th>
+                <th colspan="2" class="th-prof">VAT</th>
+                <th colspan="2" class="th-ref">GazeFollow</th>
+                <th colspan="2" class="th-out">ChildPlay</th>
+                <th colspan="2" class="th-qa">GazeHOI</th>
+                <th colspan="3" class="th-prof">GOO-Real</th>
               </tr>
               <tr>
-                <th>L₂ ↓</th><th>AUC ↑</th>
-                <th>L₂ ↓</th><th>AUC ↑</th>
-                <th>L₂ ↓</th><th>Min L₂ ↓</th><th>AUC ↑</th>
-                <th>L₂ ↓</th><th>AUC ↑</th>
-                <th>L₂ ↓</th><th>AUC ↑</th><th>GazeAcc ↑</th>
-                <th>L₂ ↓</th><th>AUC ↑</th>
+                <th>L₂ ↓</th><th>AP ↑</th>
+                <th>Avg.L₂ ↓</th><th>Min.L₂ ↓</th>
+                <th>L₂ ↓</th><th>AP ↑</th>
+                <th>L₂ ↓</th><th>AP ↑</th>
+                <th>L₂ ↓</th><th>AP ↑</th><th>mIoU ↑</th>
               </tr>
             </thead>
             <tbody>
-              <tr><td>Recasens et al.</td><td>0.253</td><td>0.809</td><td>0.242</td><td>0.789</td><td>0.227</td><td>0.155</td><td>0.857</td><td>0.292</td><td>0.754</td><td>0.259</td><td>0.817</td><td>0.371</td><td>0.245</td><td>0.829</td></tr>
-              <tr><td>Lian et al.</td><td>0.226</td><td>0.835</td><td>0.242</td><td>0.789</td><td>0.189</td><td>0.119</td><td>0.885</td><td>0.292</td><td>0.754</td><td>0.200</td><td>0.877</td><td>0.561</td><td>0.205</td><td>0.868</td></tr>
-              <tr><td>Chong et al.</td><td>0.172</td><td>0.857</td><td>0.126</td><td>0.864</td><td>0.138</td><td>0.077</td><td>0.923</td><td>0.128</td><td>0.858</td><td>0.197</td><td>0.869</td><td>0.564</td><td>0.272</td><td>0.770</td></tr>
-              <tr><td>HGTTR</td><td>0.224</td><td>0.825</td><td>0.266</td><td>0.816</td><td>0.169</td><td>0.109</td><td>0.847</td><td>0.204</td><td>0.859</td><td>0.216</td><td>0.824</td><td>0.528</td><td>0.265</td><td>0.780</td></tr>
-              <tr><td>MADGTD</td><td>0.172</td><td>0.857</td><td>0.128</td><td>0.860</td><td>0.138</td><td>0.077</td><td>0.925</td><td>0.133</td><td>0.866</td><td>0.195</td><td>0.870</td><td>0.578</td><td>0.265</td><td>0.762</td></tr>
-              <tr><td>Gupta et al.</td><td>0.181</td><td>0.867</td><td>0.128</td><td>0.898</td><td>0.156</td><td>0.091</td><td>0.914</td><td>0.144</td><td>0.893</td><td>0.198</td><td>0.867</td><td>0.556</td><td>0.279</td><td>0.765</td></tr>
-              <tr><td>Miao et al.</td><td>0.170</td><td>0.877</td><td>0.117</td><td>0.906</td><td>0.132</td><td>0.072</td><td>0.928</td><td>0.122</td><td>0.919</td><td>0.194</td><td>0.864</td><td>0.584</td><td>0.287</td><td>0.768</td></tr>
-              <tr><td>Tafasca et al.</td><td class="missing">—</td><td class="missing">—</td><td>0.123</td><td>0.904</td><td>0.128</td><td>0.065</td><td>0.935</td><td>0.112</td><td>0.924</td><td class="missing">—</td><td class="missing">—</td><td class="missing">—</td><td class="missing">—</td><td class="missing">—</td></tr>
-              <tr><td>ViTGaze</td><td>0.136</td><td>0.900</td><td>0.103</td><td>0.908</td><td>0.105</td><td>0.047</td><td>0.949</td><td>0.112</td><td>0.899</td><td>0.163</td><td>0.880</td><td class="second">0.714</td><td>0.196</td><td>0.862</td></tr>
-              <tr><td>Sharingan</td><td>0.150</td><td>0.900</td><td>0.104</td><td>0.920</td><td>0.112</td><td>0.055</td><td>0.944</td><td>0.110</td><td>0.930</td><td>0.177</td><td>0.886</td><td>0.633</td><td>0.248</td><td>0.819</td></tr>
-              <tr><td>Gaze-LLE (ViT-B)</td><td>0.132</td><td class="second">0.930</td><td>0.105</td><td>0.932</td><td>0.104</td><td class="second">0.045</td><td class="second">0.956</td><td>0.115</td><td>0.945</td><td>0.162</td><td>0.906</td><td>0.705</td><td>0.175</td><td>0.909</td></tr>
-              <tr><td>Gaze-LLE (ViT-L)</td><td class="second">0.127</td><td>0.929</td><td class="second">0.100</td><td class="second">0.937</td><td class="second">0.098</td><td class="best">0.041</td><td class="best">0.958</td><td class="second">0.102</td><td class="second">0.950</td><td class="second">0.160</td><td class="second">0.907</td><td>0.710</td><td>0.173</td><td>0.915</td></tr>
-              <tr><td>GazeAnywhere</td><td>0.183</td><td>0.897</td><td>0.236</td><td>0.845</td><td>0.179</td><td>0.115</td><td>0.923</td><td>0.139</td><td>0.916</td><td>0.196</td><td>0.885</td><td>0.625</td><td class="second">0.165</td><td class="second">0.918</td></tr>
-              <tr class="ours"><td>LookAnything (Ours)</td><td class="best">0.109</td><td class="best">0.942</td><td class="best">0.098</td><td class="best">0.941</td><td class="best">0.091</td><td>0.048</td><td>0.945</td><td class="best">0.094</td><td class="best">0.956</td><td class="best">0.130</td><td class="best">0.940</td><td class="best">0.771</td><td class="best">0.132</td><td class="best">0.927</td></tr>
+              <tr>
+                <td>Chong et al. <span class="venue-tag">CVPR’20</span></td>
+                <td>0.147</td><td>0.854</td>
+                <td>0.137</td><td>0.077</td>
+                <td>0.142</td><td>0.944</td>
+                <td>–</td><td>–</td>
+                <td>–</td><td>–</td><td>–</td>
+              </tr>
+              <tr>
+                <td>Gupta et al. <span class="venue-tag">CVPR’22</span></td>
+                <td>0.134</td><td>0.881</td>
+                <td>0.133</td><td>0.073</td>
+                <td>0.113</td><td>0.983</td>
+                <td>–</td><td>–</td>
+                <td>–</td><td>–</td><td>–</td>
+              </tr>
+              <tr>
+                <td>Tafasca et al. <span class="venue-tag">ICCV’23</span></td>
+                <td>0.109</td><td>0.939</td>
+                <td>0.125</td><td>0.064</td>
+                <td>0.107</td><td>0.986</td>
+                <td>–</td><td>–</td>
+                <td>–</td><td>–</td><td>–</td>
+              </tr>
+              <tr>
+                <td>ViTGaze <span class="venue-tag">ICCV’23</span></td>
+                <td>0.119</td><td>0.910</td>
+                <td>0.121</td><td>0.061</td>
+                <td>–</td><td>–</td>
+                <td>–</td><td>–</td>
+                <td>–</td><td>–</td><td>–</td>
+              </tr>
+              <tr>
+                <td>Gaze-LLE (ViT-B) <span class="venue-tag">CVPR’25</span></td>
+                <td>0.109</td><td>0.927</td>
+                <td>0.105</td><td>0.046</td>
+                <td>0.097</td><td><span class="val-second">0.992</span></td>
+                <td>0.088</td><td><span class="val-second">0.831</span></td>
+                <td>0.082</td><td>0.958</td><td>–</td>
+              </tr>
+              <tr>
+                <td>Gaze-LLE (ViT-L) <span class="venue-tag">CVPR’25</span></td>
+                <td><span class="val-second">0.103</span></td><td>0.933</td>
+                <td><span class="val-second">0.099</span></td><td><span class="val-best">0.041</span></td>
+                <td><span class="val-best">0.092</span></td><td><span class="val-best">0.994</span></td>
+                <td><span class="val-second">0.084</span></td><td>0.825</td>
+                <td><span class="val-second">0.075</span></td><td><span class="val-second">0.974</span></td><td>–</td>
+              </tr>
+              <tr>
+                <td>GazeVLM <span class="venue-tag">arXiv’25</span></td>
+                <td>0.116</td><td><span class="val-second">0.941</span></td>
+                <td>0.109</td><td>0.049</td>
+                <td>–</td><td>–</td>
+                <td>–</td><td>–</td>
+                <td>0.091</td><td>–</td><td><span class="val-second">0.461</span></td>
+              </tr>
+              <tr class="ours-row">
+                <td>LookAnything (2B, Ours)</td>
+                <td><span class="val-best">0.094</span></td><td><span class="val-best">0.946</span></td>
+                <td><span class="val-best">0.098</span></td><td><span class="val-second">0.042</span></td>
+                <td><span class="val-second">0.095</span></td><td><span class="val-second">0.992</span></td>
+                <td><span class="val-best">0.068</span></td><td><span class="val-best">0.869</span></td>
+                <td><span class="val-best">0.063</span></td><td><span class="val-best">0.985</span></td><td><span class="val-best">0.625</span></td>
+              </tr>
             </tbody>
           </table>
         </div>
-        <p class="table-notes"><strong>Bold</strong> is best and <span style="text-decoration: underline; text-underline-offset: 3px;">underline</span> is second best. Tafasca et al. do not report GazeHOI or GOO-Real. For LookAnything, AUC uses the auxiliary query-based heatmap while all other metrics are parsed directly from generated text.</p>
+      </div>
+    </section>
 
-        <div class="two" style="margin-top: 44px;">
+    <!-- ==================== 05 · OOD & ABLATIONS ==================== -->
+    <section class="section section-alt" id="ablations">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-kicker">05 · Generalization &amp; Ablation Analysis</span>
+          <h2 class="section-title">Zero-Shot OOD Transfer &amp; Component Verification</h2>
+          <p class="section-lead">
+            Validating out-of-distribution generalization to unseen indoor laser-spot robotics (GFIE) and multi-person operating rooms (4D-OR), alongside systematic architectural ablations.
+          </p>
+        </div>
+
+        <div class="dual-grid">
+          <!-- Table 5: Zero-Shot OOD -->
           <div class="sub-panel">
-            <p class="eyebrow" style="margin-bottom: 6px;">Zero-shot OOD Generalization</p>
-            <h3>Unseen indoor &amp; surgical benchmarks</h3>
-            <p>Evaluated zero-shot without dataset-specific fine-tuning on strictly unseen domains: GFIE (complex indoor human–scene interactions) and 4D-OR (operating-room surgical activities).</p>
+            <h3>Table 5 · Zero-Shot Out-of-Distribution Generalization</h3>
+            <p>Evaluated without any target-domain fine-tuning on <strong>GFIE</strong> (indoor human-robot gaze with ground-truth 3D laser spots) and <strong>4D-OR</strong> (complex clinical operating room workflows).</p>
             <div class="table-scroll">
-              <table class="native">
+              <table class="comp-table native-table">
                 <thead>
                   <tr>
                     <th>Method</th>
-                    <th>GFIE L₂ ↓</th>
-                    <th>4D-OR L₂ ↓</th>
+                    <th>Params</th>
+                    <th class="th-ref">GFIE (L₂ ↓)</th>
+                    <th class="th-out">4D-OR (L₂ ↓)</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr><td>Sharingan</td><td>0.0537</td><td>0.095</td></tr>
-                  <tr><td>ViTGaze</td><td>0.0534</td><td>0.093</td></tr>
-                  <tr><td>Gaze-LLE (ViT-L/14)</td><td class="second">0.0518</td><td class="second">0.084</td></tr>
-                  <tr class="ours"><td>LookAnything (Ours)</td><td class="best">0.0464</td><td class="best">0.076</td></tr>
+                  <tr>
+                    <td>Gemini-3.7-Flash</td><td>–</td><td>0.0994</td><td>0.129</td>
+                  </tr>
+                  <tr>
+                    <td>Qwen3-VL-32B</td><td>32B</td><td>0.2330</td><td>0.231</td>
+                  </tr>
+                  <tr>
+                    <td>Gaze-LLE (ViT-B)</td><td>0.1B</td><td>0.0566</td><td>0.109</td>
+                  </tr>
+                  <tr>
+                    <td>Gaze-LLE (ViT-L)</td><td>0.3B</td><td><span class="val-second">0.0510</span></td><td><span class="val-second">0.094</span></td>
+                  </tr>
+                  <tr class="ours-row">
+                    <td>LookAnything (Ours)</td><td>2B</td>
+                    <td><span class="val-best">0.0464</span></td>
+                    <td><span class="val-best">0.076</span></td>
+                  </tr>
                 </tbody>
               </table>
             </div>
           </div>
 
+          <!-- Table 4: Component Ablations -->
           <div class="sub-panel">
-            <p class="eyebrow" style="margin-bottom: 6px;">Architectural Ablations</p>
-            <h3>Structured attention, separated queries &amp; LoRA</h3>
-            <p>Each ablated variant modifies a single component relative to the full model (block-wise structured attention, specialized query groups, and vision-encoder LoRA).</p>
+            <h3>Table 4 · Ablation of Geometric Queries &amp; Structured Mask</h3>
+            <p>Progressively adding scene depth (<code>Q<sup>d</sup></code>), source head (<code>Q<sup>h</sup></code>), target spatial (<code>Q<sup>g</sup></code>) queries, and the block-wise structured mask steadily improves every metric.</p>
             <div class="table-scroll">
-              <table class="native">
+              <table class="comp-table native-table">
                 <thead>
                   <tr>
-                    <th>Setting</th>
-                    <th>Avg. MCQ ↑</th>
-                    <th>Avg. openQA ↑</th>
-                    <th>GTL-T2P L₂ ↓</th>
-                    <th>Native L₂ ↓</th>
+                    <th>Variant</th>
+                    <th class="th-qa">openQA ↑</th>
+                    <th class="th-qa">MCQ ↑</th>
+                    <th class="th-out">T2P L₂ ↓</th>
+                    <th class="th-out">T2B mIoU ↑</th>
+                    <th class="th-ref">GDO Acc ↑</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr><td>Causal attention mask</td><td>0.848</td><td>0.498</td><td>0.097</td><td>0.111</td></tr>
-                  <tr><td>Shared query group</td><td>0.845</td><td>0.493</td><td>0.098</td><td>0.112</td></tr>
-                  <tr><td>Frozen vision encoder</td><td>0.774</td><td>0.467</td><td>0.130</td><td>0.138</td></tr>
-                  <tr class="ours"><td>Full model (Ours)</td><td class="best">0.852</td><td class="best">0.518</td><td class="best">0.094</td><td class="best">0.109</td></tr>
+                  <tr>
+                    <td>SFT Baseline (Qwen3-VL-2B)</td>
+                    <td>0.484</td><td>0.826</td><td>0.118</td><td>0.296</td><td>0.892</td>
+                  </tr>
+                  <tr>
+                    <td>+ Scene Depth Query (<code>Q<sup>d</sup></code>)</td>
+                    <td>0.495</td><td>0.838</td><td>0.109</td><td>0.308</td><td>0.914</td>
+                  </tr>
+                  <tr>
+                    <td>+ Source Head Query (<code>Q<sup>d</sup> + Q<sup>h</sup></code>)</td>
+                    <td>0.503</td><td>0.843</td><td>0.103</td><td>0.317</td><td>0.918</td>
+                  </tr>
+                  <tr>
+                    <td>+ Target Query (Unmasked)</td>
+                    <td><span class="val-second">0.509</span></td><td><span class="val-second">0.846</span></td><td><span class="val-second">0.099</span></td><td><span class="val-second">0.324</span></td><td><span class="val-second">0.920</span></td>
+                  </tr>
+                  <tr class="ours-row">
+                    <td>Full LookAnything (+ Block Mask)</td>
+                    <td><span class="val-best">0.518</span></td><td><span class="val-best">0.852</span></td><td><span class="val-best">0.094</span></td><td><span class="val-best">0.333</span></td><td><span class="val-best">0.924</span></td>
+                  </tr>
                 </tbody>
               </table>
             </div>
           </div>
         </div>
 
-        <div class="two ablation-figs">
-          <figure>
-            <button class="figure-btn" type="button" data-zoom="assets/figs/ablation_queries.webp?v=4">
-              <img src="assets/figs/ablation_queries.webp?v=4" width="1800" height="507" alt="Ablation of gaze-prior queries removing depth (-D), head mask (-H), target heatmap (-M), and all queries (-All).">
-              <span class="zoom-hint">Expand</span>
+        <!-- Figures 6 & 7: Query & Token Budget Sensitivity -->
+        <div class="ablation-grid">
+          <figure class="fig-frame">
+            <button class="fig-img-btn" type="button" data-zoom="assets/figs/ablation_queries.webp" aria-label="Zoom Figure 6">
+              <img src="assets/figs/ablation_queries.webp" width="1800" height="507" loading="lazy" alt="Figure 6: Ablation on geometric query combinations.">
+              <span class="zoom-badge">Click to zoom</span>
             </button>
-            <figcaption><strong>Ablation of gaze-prior queries.</strong> Removing depth (-D) hurts openQA, removing head masks (-H) hampers MCQ reasoning, removing target heatmaps (-M) degrades localization, and removing all three (-All) degrades every metric most severely.</figcaption>
+            <figcaption class="fig-caption">
+              <strong>Figure 6 · Synergy Across Learnable Query Streams.</strong>
+              Task-level breakdown confirming that <code>Q<sup>d</sup></code> sharpens 3D depth orientation, <code>Q<sup>h</sup></code> disambiguates observers, and <code>Q<sup>g</sup></code> refines fine-grained target localization.
+            </figcaption>
           </figure>
-          <figure>
-            <button class="figure-btn" type="button" data-zoom="assets/figs/ablation_tokens.webp?v=4">
-              <img src="assets/figs/ablation_tokens.webp?v=4" width="1800" height="507" alt="Ablation of query-token budget k in {3, 6, 9, 12, 15}, peaking at k = 9.">
-              <span class="zoom-hint">Expand</span>
+
+          <figure class="fig-frame">
+            <button class="fig-img-btn" type="button" data-zoom="assets/figs/ablation_tokens.webp" aria-label="Zoom Figure 7">
+              <img src="assets/figs/ablation_tokens.webp" width="1800" height="507" loading="lazy" alt="Figure 7: Sensitivity analysis on query token budgets.">
+              <span class="zoom-badge">Click to zoom</span>
             </button>
-            <figcaption><strong>Ablation of query-token budget.</strong> Sweeping k ∈ {3, 6, 9, 12, 15} tokens per query group achieves the optimal trade-off at k = 9 (red star), avoiding insufficient bandwidth (k ≤ 6) and attention dilution (k ≥ 12).</figcaption>
+            <figcaption class="fig-caption">
+              <strong>Figure 7 · Query Token Budget Sensitivity.</strong>
+              Allocating <code>(N<sub>d</sub>, N<sub>h</sub>, N<sub>g</sub>) = (16, 4, 4)</code> achieves the optimal accuracy-efficiency trade-off with negligible inference overhead.
+            </figcaption>
           </figure>
         </div>
       </div>
     </section>
 
+    <!-- ==================== 06 · REAL-WORLD DEPLOYMENT ==================== -->
     <section class="section" id="real-world">
       <div class="container">
-        <div class="section-head">
-          <p class="eyebrow">05 / Real world</p>
-          <h2>Deployment on a Unitree G1 robot.</h2>
-          <p>To evaluate real-world out-of-domain generalization, we deploy LookAnything on a Unitree G1 robot in physical environments. From the robot’s egocentric perspective, LookAnything grounds the source person in multi-person scenes, recognizes social gaze contact, and tracks gaze targets across diverse scenarios, viewpoints, and output formats.</p>
+        <div class="section-header">
+          <span class="section-kicker">06 · Embodied Robot Experiments</span>
+          <h2 class="section-title">Interactive Real-World Evaluation on Unitree G1</h2>
+          <p class="section-lead">
+            Explore real-world rollouts captured from the humanoid’s egocentric camera across diverse environments, dynamic robot motion, and four output modalities.
+          </p>
         </div>
 
-        <div data-switcher>
-          <h3 class="block-title">Scenarios</h3>
-          <p>Three physical settings with a single model. The top-left flag reports gaze contact with the robot’s ego-camera, and the blue overlay marks the predicted source-head mask.</p>
-          <div class="tabs" role="tablist" aria-label="Real-world scenarios">
-            <button type="button" role="tab" aria-selected="true" data-src="assets/videos/shopping.mp4" data-poster="assets/posters/shopping.jpg" data-caption="In a retail space the model keeps the source head and places the gaze on the object the person is attending to. Gaze contact with the robot stays false while they look at the goods.">
-              <span class="kicker">Scenario 01</span><strong>Shopping assistance</strong><small>Follow a person through a retail space and localize what they look at.</small>
+        <!-- Switcher 1: Scenarios -->
+        <div class="switcher-card" data-switcher>
+          <div class="switcher-head">
+            <h3>1. Diverse Real-World Scenarios</h3>
+            <p>Switch between cluttered retail shelves, multi-person social exchanges, and tabletop manipulation</p>
+          </div>
+          <div class="tabs" role="tablist" aria-label="Real-world scenario videos">
+            <button role="tab" type="button" aria-selected="true"
+              data-src="assets/videos/shopping.mp4"
+              data-poster="assets/posters/shopping.jpg"
+              data-caption="Retail Shopping Aisle: Fine-grained gaze target grounding among densely packed products and shelves.">
+              <span class="kicker">Scenario A</span>
+              <strong>Retail Shopping Aisle</strong>
+              <small>Dense shelf clutter &amp; fine-grained object grounding</small>
             </button>
-            <button type="button" role="tab" aria-selected="false" tabindex="-1" data-src="assets/videos/interaction.mp4" data-poster="assets/posters/interaction.jpg" data-caption="When the person turns toward the robot, gaze contact switches on and the head mask stays on the addressed person rather than on passersby.">
-              <span class="kicker">Scenario 02</span><strong>Human–robot interaction</strong><small>Detect mutual gaze when a person in a multi-person scene looks at the robot.</small>
+            <button role="tab" type="button" aria-selected="false"
+              data-src="assets/videos/interaction.mp4"
+              data-poster="assets/posters/interaction.jpg"
+              data-caption="Multi-Person Social Interaction: Disambiguating observers, mutual eye contact with the robot, and shared attention.">
+              <span class="kicker">Scenario B</span>
+              <strong>Social HRI &amp; Eye Contact</strong>
+              <small>Multi-person referring &amp; gaze contact detection</small>
             </button>
-            <button type="button" role="tab" aria-selected="false" tabindex="-1" data-src="assets/videos/table.mp4" data-poster="assets/posters/table.jpg" data-caption="Across a tabletop, the gaze ray runs from the source head to a small object, and the bounding box closes around that object.">
-              <span class="kicker">Scenario 03</span><strong>Tabletop / Desktop</strong><small>Resolve fine-grained gaze landing on small objects across a desk.</small>
+            <button role="tab" type="button" aria-selected="false"
+              data-src="assets/videos/table.mp4"
+              data-poster="assets/posters/table.jpg"
+              data-caption="Tabletop Manipulation Workspace: Tracking human visual intent over closely spaced everyday objects.">
+              <span class="kicker">Scenario C</span>
+              <strong>Tabletop Workspace</strong>
+              <small>Close-range object disambiguation for collaboration</small>
             </button>
           </div>
           <div class="stage">
-            <video playsinline controls preload="none" controlslist="nodownload" aria-label="Scenario clip"></video>
-            <button class="play-btn" type="button" aria-label="Play clip"><i aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></i></button>
-            <p class="media-error">This clip could not be loaded.</p>
+            <video controls playsinline preload="none" poster="assets/posters/shopping.jpg"></video>
+            <button class="play-btn" type="button" aria-label="Play scenario video">
+              <i><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></i>
+            </button>
+            <p class="media-error" role="status">Could not load this clip.</p>
           </div>
           <p class="switch-caption" data-caption></p>
         </div>
 
-        <div data-switcher>
-          <h3 class="block-title">Viewpoint</h3>
-          <p>Accurate source grounding, contact detection, and target tracking hold under both stationary and walking egocentric perspectives.</p>
-          <div class="tabs" role="tablist" aria-label="Camera viewpoint">
-            <button type="button" role="tab" aria-selected="true" data-src="assets/videos/static.mp4" data-poster="assets/posters/static.jpg" data-caption="With the camera fixed, the model holds the source head and the gaze-contact flag as people move through the scene.">
-              <span class="kicker">View 01</span><strong>Static viewpoint</strong><small>A fixed egocentric camera with people moving in front of it.</small>
+        <!-- Switcher 2: Viewpoint Motion -->
+        <div class="switcher-card" data-switcher>
+          <div class="switcher-head">
+            <h3>2. Egocentric Viewpoint Robustness</h3>
+            <p>Comparing stationary observation against active locomotion and head-camera ego-motion</p>
+          </div>
+          <div class="tabs" role="tablist" aria-label="Robot viewpoint motion videos">
+            <button role="tab" type="button" aria-selected="true"
+              data-src="assets/videos/static.mp4"
+              data-poster="assets/posters/static.jpg"
+              data-caption="Static Robot Viewpoint: Stable spatial localization and 3D depth ordering under continuous human movement.">
+              <span class="kicker">Viewpoint A</span>
+              <strong>Static Stance</strong>
+              <small>Consistent grounding as subjects move and turn</small>
             </button>
-            <button type="button" role="tab" aria-selected="false" tabindex="-1" data-src="assets/videos/moving.mp4" data-poster="assets/posters/moving.jpg" data-caption="As the robot walks, motion blur and a shifting background do not drop the source head or the contact judgment.">
-              <span class="kicker">View 02</span><strong>Moving viewpoint</strong><small>The robot walks while the egocentric view shifts dynamically.</small>
+            <button role="tab" type="button" aria-selected="false"
+              data-src="assets/videos/moving.mp4"
+              data-poster="assets/posters/moving.jpg"
+              data-caption="Moving Egocentric Viewpoint: Robust gaze tracking and contact recognition during active humanoid walking.">
+              <span class="kicker">Viewpoint B</span>
+              <strong>Active Locomotion</strong>
+              <small>Robust to camera ego-motion and perspective shift</small>
             </button>
           </div>
           <div class="stage">
-            <video playsinline controls preload="none" controlslist="nodownload" aria-label="Viewpoint clip"></video>
-            <button class="play-btn" type="button" aria-label="Play clip"><i aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></i></button>
-            <p class="media-error">This clip could not be loaded.</p>
+            <video controls playsinline preload="none" poster="assets/posters/static.jpg"></video>
+            <button class="play-btn" type="button" aria-label="Play viewpoint video">
+              <i><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></i>
+            </button>
+            <p class="media-error" role="status">Could not load this clip.</p>
           </div>
           <p class="switch-caption" data-caption></p>
         </div>
 
-        <div data-switcher>
-          <h3 class="block-title">Output format</h3>
-          <p>The language instruction specifies the output format—emitting a 2D point, a bounding box, a dense heatmap, or semantic selection and description.</p>
-          <div class="tabs" role="tablist" aria-label="Output format">
-            <button type="button" role="tab" aria-selected="true" data-src="assets/videos/point.mp4" data-poster="assets/posters/point.jpg" data-caption="A point and a ray mark the gaze target while the head mask stays on the source person.">
-              <span class="kicker">Output 01</span><strong>Point</strong><small>A 2D normalized gaze point on the attended location.</small>
+        <!-- Switcher 3: Output Modalities -->
+        <div class="switcher-card" data-switcher>
+          <div class="switcher-head">
+            <h3>3. Unified Multi-Format Output Modalities</h3>
+            <p>One foundation model flexibly produces points, boxes, dense heatmaps, and natural-language answers</p>
+          </div>
+          <div class="tabs" role="tablist" aria-label="Output format videos">
+            <button role="tab" type="button" aria-selected="true"
+              data-src="assets/videos/point.mp4"
+              data-poster="assets/posters/point.jpg"
+              data-caption="2D Gaze Target Point: Sub-pixel coordinate prediction along the 3D line of sight.">
+              <span class="kicker">Modality 01</span>
+              <strong>2D Target Point</strong>
+              <small>Precise (x, y) focus coordinate</small>
             </button>
-            <button type="button" role="tab" aria-selected="false" tabindex="-1" data-src="assets/videos/box.mp4" data-poster="assets/posters/box.jpg" data-caption="The attended object is enclosed in a bounding box ready for downstream perception or manipulation.">
-              <span class="kicker">Output 02</span><strong>Box</strong><small>An instance-level bounding box around the attended object.</small>
+            <button role="tab" type="button" aria-selected="false"
+              data-src="assets/videos/box.mp4"
+              data-poster="assets/posters/box.jpg"
+              data-caption="Object &amp; Observer Bounding Boxes: Grounding attended target instances and gaze sources.">
+              <span class="kicker">Modality 02</span>
+              <strong>Instance Bounding Box</strong>
+              <small>Target &amp; source spatial extent</small>
             </button>
-            <button type="button" role="tab" aria-selected="false" tabindex="-1" data-src="assets/videos/heatmap.mp4" data-poster="assets/posters/heatmap.jpg" data-caption="The query-based heatmap concentrates on the attended region, matching conventional gaze-following benchmarks.">
-              <span class="kicker">Output 03</span><strong>Heatmap</strong><small>A spatial probability distribution over the gaze target.</small>
+            <button role="tab" type="button" aria-selected="false"
+              data-src="assets/videos/heatmap.mp4"
+              data-poster="assets/posters/heatmap.jpg"
+              data-caption="Dense Spatial Attention Heatmap: Continuous probability distribution decoded from target spatial queries Qᵍ.">
+              <span class="kicker">Modality 03</span>
+              <strong>Attention Heatmap</strong>
+              <small>Probabilistic spatial focus field</small>
             </button>
-            <button type="button" role="tab" aria-selected="false" tabindex="-1" data-src="assets/videos/text.mp4" data-poster="assets/posters/text.jpg" data-caption="Among candidate regions, the model selects and describes the item the person is attending to.">
-              <span class="kicker">Output 04</span><strong>Language</strong><small>Select and semantically describe the attended item.</small>
+            <button role="tab" type="button" aria-selected="false"
+              data-src="assets/videos/text.mp4"
+              data-poster="assets/posters/text.jpg"
+              data-caption="Open-Ended Semantic &amp; Social Reasoning: Natural-language target descriptions, 3D orientation, eye contact, and refusal.">
+              <span class="kicker">Modality 04</span>
+              <strong>Semantic Text &amp; Refusal</strong>
+              <small>Descriptions, 3D relations &amp; calibrated abstention</small>
             </button>
           </div>
           <div class="stage">
-            <video playsinline controls preload="none" controlslist="nodownload" aria-label="Output format clip"></video>
-            <button class="play-btn" type="button" aria-label="Play clip"><i aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></i></button>
-            <p class="media-error">This clip could not be loaded.</p>
+            <video controls playsinline preload="none" poster="assets/posters/point.jpg"></video>
+            <button class="play-btn" type="button" aria-label="Play modality video">
+              <i><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></i>
+            </button>
+            <p class="media-error" role="status">Could not load this clip.</p>
           </div>
           <p class="switch-caption" data-caption></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 07 · BIBTEX CITATION ==================== -->
+    <section class="section section-alt" id="bibtex">
+      <div class="container-narrow">
+        <div class="section-header">
+          <span class="section-kicker">07 · Citation</span>
+          <h2 class="section-title">Cite LookAnything</h2>
+          <p class="section-lead">
+            If you find <strong>LookAnything</strong> or <strong>HoliGaze</strong> useful in your research, please consider citing our work:
+          </p>
+        </div>
+
+        <div class="bibtex-box">
+          <button class="copy-btn" id="copy-bibtex-btn" type="button">Copy BibTeX</button>
+          <pre id="bibtex-code">@article{tang2026lookanything,
+  title   = {LookAnything: A Foundation Model for Holistic Gaze Following},
+  author  = {Tang, Jiayu and Zhou, Yuchen and Wu, Hongsheng and Ye, Hanjing and Huang, Ke and Wang, Cheng and Dai, Yuqin and Huang, Yufei and Ling, Yonggen and Gou, Chao},
+  journal = {arXiv preprint},
+  year    = {2026},
+  url     = {https://look-anything.github.io/}
+}</pre>
         </div>
       </div>
     </section>
   </main>
 
-  <footer class="footer">
-    <strong>LookAnything: A Foundation Model for Holistic Gaze Following</strong>
-    <p>Sun Yat-sen University · Xiamen University · Southern University of Science and Technology · Tsinghua University · Tencent</p>
-    <p>Code, model, and dataset will be released.</p>
+  <footer class="site-footer">
+    <div class="container">
+      <div><strong>LookAnything: A Foundation Model for Holistic Gaze Following</strong></div>
+      <div style="margin-top:4px">Sun Yat-sen University · Xiamen University · Southern University of Science and Technology · Tsinghua University · Tencent</div>
+      <div class="footer-links">
+        <a href="#top">Back to Top ↑</a>
+        <a href="https://github.com/Look-Anything" target="_blank" rel="noopener">GitHub Organization</a>
+        <a href="#holigaze">HoliGaze Dataset</a>
+        <a href="#results">Leaderboard</a>
+        <a href="#bibtex">BibTeX</a>
+      </div>
+    </div>
   </footer>
 
-  <dialog id="lightbox">
-    <button class="dialog-close" type="button" aria-label="Close">×</button>
-    <img alt="">
-  </dialog>
+  <!-- Full-Resolution Figure Lightbox -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Zoomed figure preview">
+    <div class="lightbox-inner">
+      <button class="lightbox-close" id="lightbox-close" type="button" aria-label="Close figure preview">×</button>
+      <img id="lightbox-img" src="" alt="">
+      <div class="lightbox-cap" id="lightbox-cap"></div>
+    </div>
+  </div>
+
   <script src="js/main.js"></script>
 </body>
 </html>
