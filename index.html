@@ -157,35 +157,21 @@
           <button class="play-btn" id="hero-play" type="button" aria-label="Play full demo"><i aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></i></button>
           <p class="media-error">This video could not be loaded.</p>
         </div>
-        <p class="reel-caption">Deployed on a Unitree G1 robot in real-world environments, LookAnything performs holistic gaze following from an egocentric perspective—covering human–robot interaction, shopping assistance, and tabletop settings across point, box, heatmap, and language outputs under both static and moving viewpoints.</p>
+        
       </div>
     </section>
 
     <section class="section" id="overview">
       <div class="container">
         <div class="section-head">
-          <p class="eyebrow">01 / Overview</p>
-          <h2>Unifying diverse gaze-centric tasks.</h2>
-          <p>Existing methods typically employ highly customized architectures relying on auxiliary inputs like head crops or depth maps, causing cascading errors and inference overhead. Trained on single domains and confined to isolated gaze following with heatmap outputs, they lack flexibility and generalization for diverse interactive scenarios. LookAnything bridges this gap within a single foundation model.</p>
-        </div>
-        <div class="two">
-          <article class="card problem">
-            <p class="index">The limitation</p>
-            <h3>Cascading errors &amp; narrow task scope.</h3>
-            <p>Relying on computationally expensive external inputs introduces cascading errors. Furthermore, coarse heatmaps lack instance-level semantics, rendering specialists inflexible and difficult to generalize across diverse interactive scenarios and downstream reasoning tasks.</p>
-          </article>
-          <article class="card idea">
-            <p class="index">The approach</p>
-            <h3>Learnable gaze-prior queries.</h3>
-            <p>We introduce learnable gaze-prior queries that interact with visual features to implicitly internalize scene depth, source-head orientation, and target spatial geometry directly into the latent space—promoting intrinsic gaze-aware representation learning without auxiliary external inputs.</p>
-          </article>
+          <h2>Overview</h2>
         </div>
         <figure class="paper-figure">
           <button class="figure-btn" type="button" data-zoom="assets/figs/overview.webp?v=4">
             <img src="assets/figs/overview.webp?v=4" width="3600" height="1638" alt="Overview of LookAnything and HoliGaze: scalable data engine, generalist foundation model with learnable gaze-prior queries, and evaluation on HoliGaze-Bench and conventional gaze-following benchmarks.">
             <span class="zoom-hint">Expand</span>
           </button>
-          <figcaption><strong>Overview.</strong> (a) Left: A scalable data engine transforms heterogeneous annotations from diverse scenarios into unified Q&amp;A pairs to build HoliGaze. (b) Bottom: LookAnything introduces learnable gaze-prior queries to eliminate external auxiliary inputs and flexibly generate points, boxes, heatmaps, and language. (c) Right: LookAnything outperforms 33 leading VLMs across 9 tasks on HoliGaze-Bench (0.852 MCQ, 0.518 openQA) while achieving 0.109 average L₂ across 5 conventional gaze-following benchmarks.</figcaption>
+          <figcaption><strong>Overview.</strong> <strong>(a) Left:</strong> Sourced from diverse scenarios, we design a scalable data engine to transform heterogeneous annotations into a unified Q&amp;A format. The resulting large-scale <em>HoliGaze</em> dataset provides the essential data foundation for holistic gaze following. <strong>(b) Down:</strong> <em>LookAnything</em> is a generalist foundation model that unifies diverse gaze-centric tasks. By introducing learnable gaze-prior queries, it eliminates the need for computationally expensive external inputs and flexibly generates versatile outputs (points, boxes, heatmaps, and language) for broad localization, description, and reasoning. <strong>(c) Right:</strong> We establish <em>HoliGaze-Bench</em> across 9 distinct gaze-centric tasks to systematically evaluate 33 leading VLMs. <em>LookAnything</em> demonstrates superior performance over other VLMs on this comprehensive benchmark, while achieving highly competitive results against dedicated specialists on 5 conventional gaze following datasets.</figcaption>
         </figure>
       </div>
     </section>
@@ -193,106 +179,40 @@
     <section class="section tint" id="model">
       <div class="container">
         <div class="section-head">
-          <p class="eyebrow">02 / Model</p>
-          <h2>Instruction-conditioned autoregressive generation.</h2>
-          <p>Built upon Qwen3-VL-2B, LookAnything appends learnable continuous queries Q = [Q<sup>d</sup>, Q<sup>h</sup>, Q<sup>g</sup>] to the multimodal input sequence to learn gaze-context representations via auxiliary geometric supervision. The language head autoregressively decodes localization, description, and reasoning in a unified token space, while auxiliary branches can be selectively skipped during inference.</p>
+          <h2>Model Architecture</h2>
         </div>
         <figure>
           <button class="figure-btn" type="button" data-zoom="assets/figs/model.webp?v=4">
             <img src="assets/figs/model.webp?v=4" width="3600" height="1424" alt="LookAnything architecture overview, with structurally disentangled block-wise attention mask at top-left, gaze-aware supervision via MAE decoders, and unified language output space.">
             <span class="zoom-hint">Expand</span>
           </button>
-          <figcaption><strong>Model architecture overview.</strong> Built on Qwen3-VL-2B with a LoRA-adapted vision encoder (r = 16, α = 32) and k = 9 query tokens per prior group. <strong>Top-left:</strong> Structurally disentangled block-wise attention isolates functional specialization by preventing heterogeneous query groups from attending to one another. Auxiliary decoders can be selectively skipped at inference.</figcaption>
+          <figcaption><strong>Model architecture overview.</strong> LookAnything appends learnable gaze-prior queries to the multimodal input sequence to learn gaze-aware representations via auxiliary geometric supervision (scene depth, source head grounding, and gaze target heatmap). The language head then autoregressively decodes the answer in a unified output space. The auxiliary branches can be selectively skipped during inference. <strong>Top-left:</strong> The structurally disentangled block-wise attention mechanism isolates functional specialization by preventing heterogeneous query groups from attending to one another.</figcaption>
         </figure>
-        <div class="three" style="margin-top: 20px;">
-          <article class="card">
-            <p class="index">Scene Depth Estimation · Q<sup>d</sup></p>
-            <h3>Relative monocular depth</h3>
-            <p>A lightweight MAE-style decoder projects depth query states into a 64×64 relative monocular depth map, supervised with a scale-invariant logarithmic (SiLog) loss to capture 3D structural layout between observer and target.</p>
-          </article>
-          <article class="card">
-            <p class="index">Source Head Grounding · Q<sup>h</sup></p>
-            <h3>Binary source-head mask</h3>
-            <p>An MAE-style decoder decodes head query states into a binary source-head mask, optimized via Binary Cross-Entropy and soft Dice loss to reliably anchor the observer under foreground–background imbalance.</p>
-          </article>
-          <article class="card">
-            <p class="index">Target Spatial Prediction · Q<sup>g</sup></p>
-            <h3>Heatmap, point, and box</h3>
-            <p>Via cross-attention with contextualized visual features, gaze queries decode a dense gaze heatmap (KL + MSE) while dedicated regression heads predict a normalized 2D point (Huber) and bounding box (L1 + GIoU).</p>
-          </article>
         </div>
-        <div class="split attention-explainer">
-          <div>
-            <p class="eyebrow">Block-wise structured attention</p>
-            <h3>Disentangle queries into specialized groups.</h3>
-            <p>Forcing one token stream to capture disparate physical and geometric properties causes feature entanglement. LookAnything instead isolates depth, head, and gaze queries so each group independently attends to the shared image–prompt context and itself.</p>
-          </div>
-          <article class="card idea">
-            <p class="index">Information Flow · Figure 2, Top-Left</p>
-            <h3>Specialize first, integrate in the answer.</h3>
-            <p>Heterogeneous query groups remain mutually isolated to prevent shortcut interference, while downstream autoregressive answer tokens jointly attend to all contextualized gaze representations.</p>
-          </article>
-        </div>
-      </div>
     </section>
 
     <section class="section" id="holigaze">
       <div class="container">
         <div class="section-head">
-          <p class="eyebrow">03 / HoliGaze</p>
-          <h2>A comprehensive dataset and benchmark for holistic gaze following.</h2>
-          <p>HoliGaze standardizes 311K high-quality Q&amp;A pairs across 5 distinct capability dimensions (gaze target understanding, source understanding, spatial reasoning, social interaction, and query answerability) and 9 diverse gaze-centric tasks. It provides the critical foundation for training and systematically evaluating gaze-aware generalist models.</p>
+          <h2>The HoliGaze Dataset</h2>
         </div>
         <figure>
           <button class="figure-btn" type="button" data-zoom="assets/figs/taxonomy.webp?v=4">
             <img src="assets/figs/taxonomy.webp?v=4" width="3200" height="1580" alt="Task taxonomy and Q&A examples of HoliGaze across 5 capability dimensions and 9 gaze-centric tasks in both MCQ and openQA formats.">
             <span class="zoom-hint">Expand</span>
           </button>
-          <figcaption><strong>Task taxonomy and Q&amp;A examples of HoliGaze.</strong> HoliGaze covers 5 capability dimensions (color-coded) and 9 gaze-centric tasks across both multiple-choice Q&amp;A (MCQ) and open-ended Q&amp;A (openQA), with a balanced 1:1 openQA-to-MCQ ratio in HoliGaze-Bench.</figcaption>
+          <figcaption><strong>Task taxonomy and Q&amp;A examples of HoliGaze.</strong> HoliGaze covers 5 capability dimensions and 9 gaze-centric tasks, including both multiple-choice Q&amp;A (MCQ) and open-ended Q&amp;A (openQA). Each panel represents a type of gaze-centric task, with panels of the same color belonging to the same capability dimension.</figcaption>
         </figure>
-        <div class="dims">
-          <article>
-            <p class="task-names">GTL · GTD</p>
-            <h3>Gaze target understanding</h3>
-            <p>Given a text or box reference of the gaze source person, ground the target as a 2D point (GTL-T2P) or bounding box (GTL-T2B, plus GTL-B2P in training), or describe the attended entity (GTD).</p>
-          </article>
-          <article>
-            <p class="task-names">GSL · GSD</p>
-            <h3>Gaze source understanding</h3>
-            <p>Given a textual reference to the gaze target, predict head bounding boxes for all observers (GSL) or describe their visual attributes (GSD).</p>
-          </article>
-          <article>
-            <p class="task-names">GDO · GDR</p>
-            <h3>Gaze spatial reasoning</h3>
-            <p>Determine whether the observer’s head is closer to or farther from the camera than the target (GDO), and classify gaze into four camera-relative directions (GDR).</p>
-          </article>
-          <article>
-            <p class="task-names">GCD</p>
-            <h3>Gaze social interaction</h3>
-            <p>Binary MCQ asking whether a specified person in the scene is making direct eye contact with the camera wearer.</p>
-          </article>
-          <article>
-            <p class="task-names">ARR · PV</p>
-            <h3>Gaze query answerability</h3>
-            <p>Refuse ill-posed queries when a referring expression matches multiple entities (ARR) or when the gaze target lies outside the frame (PV).</p>
-          </article>
-        </div>
+        
 
         <figure class="paper-figure">
           <button class="figure-btn" type="button" data-zoom="assets/figs/data_engine.webp?v=4">
             <img src="assets/figs/data_engine.webp?v=4" width="3200" height="1525" alt="HoliGaze data engine and dataset statistics: schema unifying, annotation completion, Q&A generation, human verification, and HoliGaze-Bench sunburst and Sankey distributions.">
             <span class="zoom-hint">Expand</span>
           </button>
-          <figcaption><strong>Data engine and dataset statistics of HoliGaze.</strong> Native train/test splits are strictly preserved to prevent data leakage. HoliGaze-Bench undergoes instance-level human verification, yielding a low 0.70% modification rate.</figcaption>
+          <figcaption><strong>Data engine and dataset statistics of HoliGaze.</strong> The data engine converts 8 source datasets into unified Q&amp;A samples via four stages: (1) unifying heterogeneous records into a shared schema, (2) completing missing annotations using off-the-shelf models, (3) generating openQA and MCQ pairs via task-specific templates, and (4) conducting human verification. <strong>Top-right:</strong> Statistics of HoliGaze-Bench, which comprises 8K evaluation pairs quota-sampled across 9 tasks with a balanced 1:1 ratio of openQA to MCQ.</figcaption>
         </figure>
-        <div class="steps">
-          <article><strong>1. Schema Unifying</strong><p>Unify heterogeneous gaze records from 8 academic datasets into a shared representation schema.</p></article>
-          <article><strong>2. Annotation Completion</strong><p>Complete missing head masks, scene depth, and referring expressions with SAM3, Depth Anything v3, and Gemini.</p></article>
-          <article><strong>3. Q&amp;A Generation</strong><p>Instantiate templates into openQA and MCQ pairs, synthesizing hard distractors via entity expansion, attribute perturbation, and box permutation.</p></article>
-          <article><strong>4. Human Verification</strong><p>Preserve native splits and verify all 8K HoliGaze-Bench instances human-by-human (0.70% modified).</p></article>
-        </div>
-        <div class="metric-row">
-          <div><b>311K</b><span>Q&amp;A pairs</span></div>
+        
           <div><b>171K</b><span>Images</span></div>
           <div><b>187K</b><span>Gaze interactions</span></div>
           <div><b>8</b><span>Source datasets</span></div>
@@ -359,27 +279,14 @@
         </div>
         <p class="table-notes"><strong>Results on HoliGaze-Bench.</strong> LookAnything (2B), trained on HoliGaze-Corpus (303K), achieves the best score across all 16 metrics. Overall best is in <strong>bold</strong> and strongest baseline is <span style="text-decoration: underline; text-underline-offset: 3px;">underlined</span>. Lower is better only for GTL T2P L₂. Click any column header to sort.</p>
 
-        <div class="findings">
-          <article>
-            <h3>Geometric grounding is the primary gap.</h3>
-            <p>Closed-source models like Gemini-3.7-Flash (0.770 Avg. MCQ) excel on descriptive MCQs, yet struggle on localization. Even the strongest open-source localizers (Qwen3.8-27B, 0.152 GTL-T2B mIoU) trail LookAnything (0.333) by large margins.</p>
-          </article>
-          <article>
-            <h3>Embodied pretraining does not automatically transfer.</h3>
-            <p>Embodied VLMs (e.g., RoboBrain) perform adequately on GCD and GDO, but remain weak on point and box localization—indicating that generic spatial or action-centric supervision cannot substitute for gaze-specific priors.</p>
-          </article>
-          <article>
-            <h3>Broad gains at a compact 2B scale.</h3>
-            <p>Compared to its Qwen3-VL-2B backbone, LookAnything cuts GTL-T2P L₂ from 0.387 to 0.094 while boosting Avg. MCQ from 0.465 to 0.852 and Avg. openQA from 0.087 to 0.518, outperforming 27B–38B generalists across every metric.</p>
-          </article>
-        </div>
+        
 
         <figure class="paper-figure">
           <button class="figure-btn" type="button" data-zoom="assets/figs/scale.webp?v=4">
             <img src="assets/figs/scale.webp?v=4" width="2800" height="616" alt="HoliGaze-Bench performance versus model size across Avg. MCQ, Avg. openQA, GTL-T2B mIoU, and GSL mIoU, showing LookAnything (2B, red star) well above Qwen, InternVL, and best closed-source baselines.">
             <span class="zoom-hint">Expand</span>
           </button>
-          <figcaption><strong>HoliGaze-Bench performance vs. model size.</strong> Our 2B model (red star) lies well above the open-source scaling trend (Qwen, InternVL) and surpasses the strongest closed-source baseline across all four panels.</figcaption>
+          <figcaption><strong>HoliGaze-Bench performance vs. model size.</strong> Our 2B model (red star) achieves superior performance despite its compact scale.</figcaption>
         </figure>
 
         <h3 class="block-title">Five conventional gaze-following benchmarks</h3>
@@ -431,9 +338,7 @@
     <section class="section" id="real-world">
       <div class="container">
         <div class="section-head">
-          <p class="eyebrow">05 / Real world</p>
-          <h2>Deployment on a Unitree G1 robot.</h2>
-          <p>To evaluate real-world out-of-domain generalization, we deploy LookAnything on a Unitree G1 robot in physical environments. From the robot’s egocentric perspective, LookAnything grounds the source person in multi-person scenes, recognizes social gaze contact, and tracks gaze targets across diverse scenarios, viewpoints, and output formats.</p>
+          <h2>Real-World Deployment</h2>
         </div>
 
         <div data-switcher>
