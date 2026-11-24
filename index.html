@@ -206,7 +206,7 @@
           </button>
           <figcaption><strong>Model architecture overview.</strong> Built on Qwen3-VL-2B with a LoRA-adapted vision encoder (r = 16, α = 32) and k = 9 query tokens per prior group. <strong>Top-left:</strong> Structurally disentangled block-wise attention isolates functional specialization by preventing heterogeneous query groups from attending to one another. Auxiliary decoders can be selectively skipped at inference.</figcaption>
         </figure>
-        <div class="two" style="margin-top: 20px;">
+        <div class="three" style="margin-top: 20px;">
           <article class="card">
             <p class="index">Scene Depth Estimation · Q<sup>d</sup></p>
             <h3>Relative monocular depth</h3>
@@ -222,10 +222,17 @@
             <h3>Heatmap, point, and box</h3>
             <p>Via cross-attention with contextualized visual features, gaze queries decode a dense gaze heatmap (KL + MSE) while dedicated regression heads predict a normalized 2D point (Huber) and bounding box (L1 + GIoU).</p>
           </article>
+        </div>
+        <div class="split attention-explainer">
+          <div>
+            <p class="eyebrow">Block-wise structured attention</p>
+            <h3>Disentangle queries into specialized groups.</h3>
+            <p>Forcing one token stream to capture disparate physical and geometric properties causes feature entanglement. LookAnything instead isolates depth, head, and gaze queries so each group independently attends to the shared image–prompt context and itself.</p>
+          </div>
           <article class="card idea">
-            <p class="index">Block-wise Structured Attention · Top-left</p>
-            <h3>Structurally disentangled queries</h3>
-            <p>Each query group independently attends to the shared image–prompt context and itself while remaining isolated from other query groups, preventing shortcut interference; downstream answer tokens attend jointly to all groups.</p>
+            <p class="index">Information Flow · Figure 2, Top-Left</p>
+            <h3>Specialize first, integrate in the answer.</h3>
+            <p>Heterogeneous query groups remain mutually isolated to prevent shortcut interference, while downstream autoregressive answer tokens jointly attend to all contextualized gaze representations.</p>
           </article>
         </div>
       </div>
@@ -332,7 +339,7 @@
         <div class="section-head">
           <p class="eyebrow">04 / Results</p>
           <h2>Exceeding VLMs in breadth, matching specialists in precision.</h2>
-          <p>We evaluate LookAnything across 33 leading closed-source and open-source MLLMs on HoliGaze-Bench, against 11 representative specialists on 5 conventional gaze-following benchmarks, and zero-shot on 2 unseen out-of-domain datasets.</p>
+          <p>We evaluate LookAnything against 33 leading closed-source and open-source MLLMs on HoliGaze-Bench, and against representative specialists on 5 conventional gaze-following benchmarks.</p>
         </div>
 
         <div class="controls">
@@ -420,72 +427,6 @@
         </div>
         <p class="table-notes"><strong>Bold</strong> is best and <span style="text-decoration: underline; text-underline-offset: 3px;">underline</span> is second best. Tafasca et al. do not report GazeHOI or GOO-Real. For LookAnything, AUC uses the auxiliary query-based heatmap while all other metrics are parsed directly from generated text.</p>
 
-        <div class="two" id="ablations" style="margin-top: 44px;">
-          <div class="sub-panel">
-            <p class="eyebrow" style="margin-bottom: 6px;">Zero-shot OOD Generalization</p>
-            <h3>Unseen indoor &amp; surgical benchmarks</h3>
-            <p>Evaluated zero-shot without dataset-specific fine-tuning on strictly unseen domains: GFIE (complex indoor human–scene interactions) and 4D-OR (operating-room surgical activities).</p>
-            <div class="table-scroll">
-              <table class="native">
-                <thead>
-                  <tr>
-                    <th>Method</th>
-                    <th>GFIE L₂ ↓</th>
-                    <th>4D-OR L₂ ↓</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr><td>Sharingan</td><td>0.0537</td><td>0.095</td></tr>
-                  <tr><td>ViTGaze</td><td>0.0534</td><td>0.093</td></tr>
-                  <tr><td>Gaze-LLE (ViT-L/14)</td><td class="second">0.0518</td><td class="second">0.084</td></tr>
-                  <tr class="ours"><td>LookAnything (Ours)</td><td class="best">0.0464</td><td class="best">0.076</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="sub-panel">
-            <p class="eyebrow" style="margin-bottom: 6px;">Architectural Ablations</p>
-            <h3>Structured attention, separated queries &amp; LoRA</h3>
-            <p>Each ablated variant modifies a single component relative to the full model (block-wise structured attention, specialized query groups, and vision-encoder LoRA).</p>
-            <div class="table-scroll">
-              <table class="native">
-                <thead>
-                  <tr>
-                    <th>Setting</th>
-                    <th>Avg. MCQ ↑</th>
-                    <th>Avg. openQA ↑</th>
-                    <th>GTL-T2P L₂ ↓</th>
-                    <th>Native L₂ ↓</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr><td>Causal attention mask</td><td>0.848</td><td>0.498</td><td>0.097</td><td>0.111</td></tr>
-                  <tr><td>Shared query group</td><td>0.845</td><td>0.493</td><td>0.098</td><td>0.112</td></tr>
-                  <tr><td>Frozen vision encoder</td><td>0.774</td><td>0.467</td><td>0.130</td><td>0.138</td></tr>
-                  <tr class="ours"><td>Full model (Ours)</td><td class="best">0.852</td><td class="best">0.518</td><td class="best">0.094</td><td class="best">0.109</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <div class="two ablation-figs">
-          <figure>
-            <button class="figure-btn" type="button" data-zoom="assets/figs/ablation_queries.webp?v=4">
-              <img src="assets/figs/ablation_queries.webp?v=4" width="1800" height="507" alt="Ablation of gaze-prior queries removing depth (-D), head mask (-H), target heatmap (-M), and all queries (-All).">
-              <span class="zoom-hint">Expand</span>
-            </button>
-            <figcaption><strong>Ablation of gaze-prior queries.</strong> Removing depth (-D) hurts openQA, removing head masks (-H) hampers MCQ reasoning, removing target heatmaps (-M) degrades localization, and removing all three (-All) degrades every metric most severely.</figcaption>
-          </figure>
-          <figure>
-            <button class="figure-btn" type="button" data-zoom="assets/figs/ablation_tokens.webp?v=4">
-              <img src="assets/figs/ablation_tokens.webp?v=4" width="1800" height="507" alt="Ablation of query-token budget k in {3, 6, 9, 12, 15}, peaking at k = 9.">
-              <span class="zoom-hint">Expand</span>
-            </button>
-            <figcaption><strong>Ablation of query-token budget.</strong> Sweeping k ∈ {3, 6, 9, 12, 15} tokens per query group achieves the optimal trade-off at k = 9 (red star), avoiding insufficient bandwidth (k ≤ 6) and attention dilution (k ≥ 12).</figcaption>
-          </figure>
-        </div>
       </div>
     </section>
 
