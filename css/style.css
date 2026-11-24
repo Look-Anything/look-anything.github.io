@@ -1134,6 +1134,21 @@ a:hover {
   margin-right: 2px;
 }
 
+.author-note {
+  margin: 8px 0 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink-muted);
+}
+
+.author-note sup {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--brand-blue);
+  margin-right: 1px;
+}
+
 /* Primary Resource & Action Buttons (arXiv, Code, Dataset, Video, Cite) */
 .cta-row {
   display: flex;
