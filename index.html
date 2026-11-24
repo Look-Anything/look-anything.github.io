@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=7">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -166,12 +166,14 @@
         <div class="section-head">
           <h2>Overview</h2>
         </div>
-        <figure class="paper-figure">
-          <button class="figure-btn" type="button" data-zoom="assets/figs/overview.webp?v=4">
-            <img src="assets/figs/overview.webp?v=4" width="3600" height="1638" alt="Overview of LookAnything and HoliGaze: scalable data engine, generalist foundation model with learnable gaze-prior queries, and evaluation on HoliGaze-Bench and conventional gaze-following benchmarks.">
-            <span class="zoom-hint">Expand</span>
+        <figure class="fig-frame">
+          <button class="fig-img-btn" type="button" data-zoom="assets/figs/overview.webp?v=4">
+            <span class="fig-img-wrap">
+              <img src="assets/figs/overview.webp?v=4" width="3600" height="1638" alt="Overview of LookAnything and HoliGaze: scalable data engine, generalist foundation model with learnable gaze-prior queries, and evaluation on HoliGaze-Bench and conventional gaze-following benchmarks.">
+              <span class="zoom-badge">Expand</span>
+            </span>
           </button>
-          <figcaption><strong>Overview.</strong> <strong>(a) Left:</strong> Sourced from diverse scenarios, we design a scalable data engine to transform heterogeneous annotations into a unified Q&amp;A format. The resulting large-scale <em>HoliGaze</em> dataset provides the essential data foundation for holistic gaze following. <strong>(b) Down:</strong> <em>LookAnything</em> is a generalist foundation model that unifies diverse gaze-centric tasks. By introducing learnable gaze-prior queries, it eliminates the need for computationally expensive external inputs and flexibly generates versatile outputs (points, boxes, heatmaps, and language) for broad localization, description, and reasoning. <strong>(c) Right:</strong> We establish <em>HoliGaze-Bench</em> across 9 distinct gaze-centric tasks to systematically evaluate 33 leading VLMs. <em>LookAnything</em> demonstrates superior performance over other VLMs on this comprehensive benchmark, while achieving highly competitive results against dedicated specialists on 5 conventional gaze following datasets.</figcaption>
+          <figcaption class="fig-caption"><strong>Overview.</strong> <strong>(a) Left:</strong> Sourced from diverse scenarios, we design a scalable data engine to transform heterogeneous annotations into a unified Q&amp;A format. The resulting large-scale <em>HoliGaze</em> dataset provides the essential data foundation for holistic gaze following. <strong>(b) Down:</strong> <em>LookAnything</em> is a generalist foundation model that unifies diverse gaze-centric tasks. By introducing learnable gaze-prior queries, it eliminates the need for computationally expensive external inputs and flexibly generates versatile outputs (points, boxes, heatmaps, and language) for broad localization, description, and reasoning. <strong>(c) Right:</strong> We establish <em>HoliGaze-Bench</em> across 9 distinct gaze-centric tasks to systematically evaluate 33 leading VLMs. <em>LookAnything</em> demonstrates superior performance over other VLMs on this comprehensive benchmark, while achieving highly competitive results against dedicated specialists on 5 conventional gaze following datasets.</figcaption>
         </figure>
       </div>
     </section>
@@ -181,12 +183,14 @@
         <div class="section-head">
           <h2>Model Architecture</h2>
         </div>
-        <figure>
-          <button class="figure-btn" type="button" data-zoom="assets/figs/model.webp?v=4">
-            <img src="assets/figs/model.webp?v=4" width="3600" height="1424" alt="LookAnything architecture overview, with structurally disentangled block-wise attention mask at top-left, gaze-aware supervision via MAE decoders, and unified language output space.">
-            <span class="zoom-hint">Expand</span>
+        <figure class="fig-frame">
+          <button class="fig-img-btn" type="button" data-zoom="assets/figs/model.webp?v=4">
+            <span class="fig-img-wrap">
+              <img src="assets/figs/model.webp?v=4" width="3600" height="1424" alt="LookAnything architecture overview, with structurally disentangled block-wise attention mask at top-left, gaze-aware supervision via MAE decoders, and unified language output space.">
+              <span class="zoom-badge">Expand</span>
+            </span>
           </button>
-          <figcaption><strong>Model architecture overview.</strong> LookAnything appends learnable gaze-prior queries to the multimodal input sequence to learn gaze-aware representations via auxiliary geometric supervision (scene depth, source head grounding, and gaze target heatmap). The language head then autoregressively decodes the answer in a unified output space. The auxiliary branches can be selectively skipped during inference. <strong>Top-left:</strong> The structurally disentangled block-wise attention mechanism isolates functional specialization by preventing heterogeneous query groups from attending to one another.</figcaption>
+          <figcaption class="fig-caption"><strong>Model architecture overview.</strong> LookAnything appends learnable gaze-prior queries to the multimodal input sequence to learn gaze-aware representations via auxiliary geometric supervision (scene depth, source head grounding, and gaze target heatmap). The language head then autoregressively decodes the answer in a unified output space. The auxiliary branches can be selectively skipped during inference. <strong>Top-left:</strong> The structurally disentangled block-wise attention mechanism isolates functional specialization by preventing heterogeneous query groups from attending to one another.</figcaption>
         </figure>
         </div>
     </section>
@@ -196,32 +200,35 @@
         <div class="section-head">
           <h2>The HoliGaze Dataset</h2>
         </div>
-        <figure>
-          <button class="figure-btn" type="button" data-zoom="assets/figs/taxonomy.webp?v=4">
-            <img src="assets/figs/taxonomy.webp?v=4" width="3200" height="1580" alt="Task taxonomy and Q&A examples of HoliGaze across 5 capability dimensions and 9 gaze-centric tasks in both MCQ and openQA formats.">
-            <span class="zoom-hint">Expand</span>
+        <figure class="fig-frame">
+          <button class="fig-img-btn" type="button" data-zoom="assets/figs/taxonomy.webp?v=4">
+            <span class="fig-img-wrap">
+              <img src="assets/figs/taxonomy.webp?v=4" width="3200" height="1580" alt="Task taxonomy and Q&A examples of HoliGaze across 5 capability dimensions and 9 gaze-centric tasks in both MCQ and openQA formats.">
+              <span class="zoom-badge">Expand</span>
+            </span>
           </button>
-          <figcaption><strong>Task taxonomy and Q&amp;A examples of HoliGaze.</strong> HoliGaze covers 5 capability dimensions and 9 gaze-centric tasks, including both multiple-choice Q&amp;A (MCQ) and open-ended Q&amp;A (openQA). Each panel represents a type of gaze-centric task, with panels of the same color belonging to the same capability dimension.</figcaption>
+          <figcaption class="fig-caption"><strong>Task taxonomy and Q&amp;A examples of HoliGaze.</strong> HoliGaze covers 5 capability dimensions and 9 gaze-centric tasks, including both multiple-choice Q&amp;A (MCQ) and open-ended Q&amp;A (openQA). Each panel represents a type of gaze-centric task, with panels of the same color belonging to the same capability dimension.</figcaption>
         </figure>
-        
 
-        <figure class="paper-figure">
-          <button class="figure-btn" type="button" data-zoom="assets/figs/data_engine.webp?v=4">
-            <img src="assets/figs/data_engine.webp?v=4" width="3200" height="1525" alt="HoliGaze data engine and dataset statistics: schema unifying, annotation completion, Q&A generation, human verification, and HoliGaze-Bench sunburst and Sankey distributions.">
-            <span class="zoom-hint">Expand</span>
+        <figure class="fig-frame">
+          <button class="fig-img-btn" type="button" data-zoom="assets/figs/data_engine.webp?v=4">
+            <span class="fig-img-wrap">
+              <img src="assets/figs/data_engine.webp?v=4" width="3200" height="1525" alt="HoliGaze data engine and dataset statistics: schema unifying, annotation completion, Q&A generation, human verification, and HoliGaze-Bench sunburst and Sankey distributions.">
+              <span class="zoom-badge">Expand</span>
+            </span>
           </button>
-          <figcaption><strong>Data engine and dataset statistics of HoliGaze.</strong> The data engine converts 8 source datasets into unified Q&amp;A samples via four stages: (1) unifying heterogeneous records into a shared schema, (2) completing missing annotations using off-the-shelf models, (3) generating openQA and MCQ pairs via task-specific templates, and (4) conducting human verification. <strong>Top-right:</strong> Statistics of HoliGaze-Bench, which comprises 8K evaluation pairs quota-sampled across 9 tasks with a balanced 1:1 ratio of openQA to MCQ.</figcaption>
+          <figcaption class="fig-caption"><strong>Data engine and dataset statistics of HoliGaze.</strong> The data engine converts 8 source datasets into unified Q&amp;A samples via four stages: (1) unifying heterogeneous records into a shared schema, (2) completing missing annotations using off-the-shelf models, (3) generating openQA and MCQ pairs via task-specific templates, and (4) conducting human verification. <strong>Top-right:</strong> Statistics of HoliGaze-Bench, which comprises 8K evaluation pairs quota-sampled across 9 tasks with a balanced 1:1 ratio of openQA to MCQ.</figcaption>
         </figure>
-        
+
+        <div class="metric-row">
           <div><b>171K</b><span>Images</span></div>
           <div><b>187K</b><span>Gaze interactions</span></div>
           <div><b>8</b><span>Source datasets</span></div>
           <div><b>0.70%</b><span>Bench edits</span></div>
         </div>
 
-        <div class="table-scroll" style="margin-top: 28px; max-height: none;">
+        <div class="table-scroll compare-scroll">
           <table class="compare">
-            <caption class="table-notes" style="caption-side: bottom; text-align: left; padding: 12px 14px 4px;">Samples count instances in native formats (gaze annotations or Q&amp;A pairs). HoliGaze is the only dataset simultaneously supporting both referring types, all three output modalities, and both Q&amp;A formats across 9 tasks.</caption>
             <thead>
               <tr>
                 <th>Dataset</th>
@@ -249,6 +256,7 @@
             </tbody>
           </table>
         </div>
+        <p class="table-notes">Samples count instances in native formats (gaze annotations or Q&amp;A pairs). HoliGaze is the only dataset simultaneously supporting both referring types, all three output modalities, and both Q&amp;A formats across 9 tasks.</p>
       </div>
     </section>
 
@@ -281,12 +289,14 @@
 
         
 
-        <figure class="paper-figure">
-          <button class="figure-btn" type="button" data-zoom="assets/figs/scale.webp?v=4">
-            <img src="assets/figs/scale.webp?v=4" width="2800" height="616" alt="HoliGaze-Bench performance versus model size across Avg. MCQ, Avg. openQA, GTL-T2B mIoU, and GSL mIoU, showing LookAnything (2B, red star) well above Qwen, InternVL, and best closed-source baselines.">
-            <span class="zoom-hint">Expand</span>
+        <figure class="fig-frame">
+          <button class="fig-img-btn" type="button" data-zoom="assets/figs/scale.webp?v=4">
+            <span class="fig-img-wrap">
+              <img src="assets/figs/scale.webp?v=4" width="2800" height="616" alt="HoliGaze-Bench performance versus model size across Avg. MCQ, Avg. openQA, GTL-T2B mIoU, and GSL mIoU, showing LookAnything (2B, red star) well above Qwen, InternVL, and best closed-source baselines.">
+              <span class="zoom-badge">Expand</span>
+            </span>
           </button>
-          <figcaption><strong>HoliGaze-Bench performance vs. model size.</strong> Our 2B model (red star) achieves superior performance despite its compact scale.</figcaption>
+          <figcaption class="fig-caption"><strong>HoliGaze-Bench performance vs. model size.</strong> Our 2B model (red star) achieves superior performance despite its compact scale.</figcaption>
         </figure>
 
         <h3 class="block-title">Five conventional gaze-following benchmarks</h3>

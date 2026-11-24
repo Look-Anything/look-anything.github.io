@@ -1449,15 +1449,23 @@ a:hover {
 }
 
 .fig-img-btn {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
   width: 100%;
   border: 0;
   padding: 0;
+  margin: 0;
   background: transparent;
-  position: relative;
+  position: static;
   cursor: zoom-in;
   border-radius: var(--radius-sm);
-  overflow: hidden;
+  overflow: visible;
+  appearance: none;
+  -webkit-appearance: none;
+  line-height: 0;
+  text-align: left;
+  color: inherit;
 }
 
 .fig-img-btn img {
@@ -3058,5 +3066,154 @@ figcaption {
 @media (max-width: 980px) {
   .attention-explainer {
     grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   Figure panels, dataset stats, and contained tables
+   Image and caption share one panel. The inner wrap gives <button> a
+   definite height in Safari, where a replaced child otherwise collapses
+   the button and lets the caption paint over the figure.
+   ========================================================================== */
+
+.fig-frame {
+  margin: 28px 0 0;
+}
+
+.section-head + .fig-frame {
+  margin-top: 0;
+}
+
+.fig-img-wrap {
+  display: block;
+  position: relative;
+  width: 100%;
+  flex: 0 0 auto;
+  line-height: 0;
+}
+
+.fig-img-wrap img,
+.fig-img-btn img {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  display: block;
+  flex: 0 0 auto;
+  border-radius: var(--radius-sm);
+}
+
+.fig-frame .fig-caption {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--bg-subtle);
+  text-align: left;
+  color: var(--ink-muted);
+  font-size: 0.87rem;
+  line-height: 1.62;
+  overflow-wrap: break-word;
+}
+
+.zoom-badge {
+  line-height: 1.4;
+  pointer-events: none;
+}
+
+.metric-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 22px 0 0;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  text-align: center;
+  overflow: hidden;
+}
+
+.metric-row div {
+  padding: 16px 12px;
+  min-width: 0;
+}
+
+.metric-row b {
+  display: block;
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: clamp(1.45rem, 2vw, 1.75rem);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--ink-strong);
+  background: none;
+  -webkit-text-fill-color: currentColor;
+}
+
+.metric-row span {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink-muted);
+}
+
+.table-scroll,
+.compare-scroll {
+  max-width: 100%;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.compare-scroll {
+  margin-top: 22px;
+  max-height: none;
+}
+
+.compare {
+  width: max-content;
+  min-width: 100%;
+}
+
+.leaderboard,
+.native {
+  width: max-content;
+  min-width: 100%;
+}
+
+@media (max-width: 860px) {
+  .nav-inner {
+    padding: 8px 14px;
+  }
+  .nav-brand {
+    min-width: 0;
+  }
+  .nav-brand-tag {
+    display: none;
+  }
+  .author-item,
+  .affiliation-line span {
+    white-space: normal;
+  }
+  .metric-row {
+    grid-template-columns: 1fr 1fr;
+  }
+  .metric-row div:nth-child(odd) {
+    border-left: 0;
+  }
+  .metric-row div:nth-child(n + 3) {
+    border-top: 1px solid var(--border-light);
+  }
+}
+
+@media (max-width: 360px) {
+  .metric-row {
+    grid-template-columns: 1fr;
+  }
+  .metric-row div + div {
+    border-left: 0;
+    border-top: 1px solid var(--border-light);
+  }
+  .fig-frame {
+    padding: 12px;
   }
 }
