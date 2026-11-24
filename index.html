@@ -59,9 +59,7 @@
         </div>
 
         <p class="hero-subtitle">
-          Bridging low-level 2D point regression and open-ended social scene reasoning — unifying
-          <strong>flexible multimodal prompts</strong>, <strong>bidirectional gaze grounding</strong>,
-          <strong>3D spatial awareness</strong>, and <strong>answerability verification</strong> in a single <strong>2B</strong> model.
+          Benefiting from large-scale multi-task and cross-domain training, LookAnything unifies diverse gaze-centric tasks within a single multimodal framework — flexibly generating <strong>points</strong>, <strong>boxes</strong>, <strong>heatmaps</strong>, and <strong>natural language</strong> for holistic gaze following.
         </p>
 
         <!-- Authors & Institutional Affiliations -->
@@ -139,8 +137,8 @@
           </div>
           <div class="stat-card s-model">
             <div class="stat-value">2B</div>
-            <div class="stat-label">LookAnything Model</div>
-            <div class="stat-sub">Explicit 3D geometry injection + block-wise structured attention</div>
+            <div class="stat-label">Foundation Model</div>
+            <div class="stat-sub">Intrinsic gaze-aware representations without auxiliary external inputs</div>
           </div>
           <div class="stat-card s-bench">
             <div class="stat-value">33 VLMs</div>
@@ -167,19 +165,19 @@
       <div class="container">
         <div class="section-head">
           <p class="eyebrow">01 / Overview</p>
-          <h2>Unifying diverse gaze-centric tasks for holistic gaze following.</h2>
-          <p>Existing specialist methods employ customized architectures that rely on auxiliary inputs like head crops or depth maps—introducing cascading errors and inference overhead—and remain confined to single-domain heatmap prediction lacking instance-level semantics. Recent VLM adaptations remain narrow in task scope and underexploit gaze-centric priors. LookAnything bridges this gap within a single foundation model.</p>
+          <h2>Unifying diverse gaze-centric tasks.</h2>
+          <p>Existing methods typically employ highly customized architectures relying on auxiliary inputs like head crops or depth maps, causing cascading errors and inference overhead. Trained on single domains and confined to isolated gaze following with heatmap outputs, they lack flexibility and generalization for diverse interactive scenarios. LookAnything bridges this gap within a single foundation model.</p>
         </div>
         <div class="two">
           <article class="card problem">
             <p class="index">The limitation</p>
-            <h3>Cascading external inputs &amp; narrow outputs.</h3>
-            <p>Pre-extracted head crops and external depth estimators add runtime overhead and compounding errors. Coarse heatmaps carry no instance-level semantics, so a single specialist cannot describe attended targets, ground observers, or refuse ill-posed queries.</p>
+            <h3>Cascading errors &amp; narrow task scope.</h3>
+            <p>Relying on computationally expensive external inputs introduces cascading errors. Furthermore, coarse heatmaps lack instance-level semantics, rendering specialists inflexible and difficult to generalize across diverse interactive scenarios and downstream reasoning tasks.</p>
           </article>
           <article class="card idea">
             <p class="index">The approach</p>
-            <h3>Learnable gaze-prior queries in latent space.</h3>
-            <p>We introduce learnable gaze-prior queries that interact with visual features to implicitly internalize scene depth, source-head grounding, and target spatial geometry in the latent space—supporting points, bounding boxes, heatmaps, and language without external auxiliary inputs.</p>
+            <h3>Learnable gaze-prior queries.</h3>
+            <p>We introduce learnable gaze-prior queries that interact with visual features to implicitly internalize scene depth, source-head orientation, and target spatial geometry directly into the latent space—promoting intrinsic gaze-aware representation learning without auxiliary external inputs.</p>
           </article>
         </div>
         <figure class="paper-figure">
@@ -243,7 +241,7 @@
         <div class="section-head">
           <p class="eyebrow">03 / HoliGaze</p>
           <h2>A comprehensive dataset and benchmark for holistic gaze following.</h2>
-          <p>HoliGaze standardizes heterogeneous annotations from 8 source datasets into 311K Q&amp;A pairs across 5 capability dimensions and 9 gaze-centric tasks—comprising HoliGaze-Corpus (303K training samples) and HoliGaze-Bench (8K human-verified evaluation pairs over 6,143 images).</p>
+          <p>HoliGaze standardizes 311K high-quality Q&amp;A pairs across 5 distinct capability dimensions (gaze target understanding, source understanding, spatial reasoning, social interaction, and query answerability) and 9 diverse gaze-centric tasks. It provides the critical foundation for training and systematically evaluating gaze-aware generalist models.</p>
         </div>
         <figure>
           <button class="figure-btn" type="button" data-zoom="assets/figs/taxonomy.webp?v=4">
